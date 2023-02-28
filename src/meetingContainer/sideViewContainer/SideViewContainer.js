@@ -1,59 +1,44 @@
-import {
-  Box,
-  capitalize,
-  Dialog,
-  IconButton,
-  Slide,
-  Typography,
-  useTheme,
-  Fade,
-  makeStyles,
-} from "@material-ui/core";
-import React, { useMemo } from "react";
-import {
-  sideBarModes,
-  appThemes,
-  useMeetingAppContext,
-  sideBarNestedModes,
-} from "../../MeetingAppContextDef";
-import ChatTabPanel from "./ChatTabPanel";
-import ParticipantsTabPanel from "./ParticipantsTabPanel";
-import CloseIcon from "@material-ui/icons/Close";
-import useIsTab from "../../utils/useIsTab";
-import useIsMobile from "../../utils/useIsMobile";
-import ActivitiesTabPanel from "./ActivitiesTabPanel";
-import useResponsiveSize from "../../utils/useResponsiveSize";
-import { useMeeting } from "@videosdk.live/react-sdk";
-import LiveStreamConfigTabPanel from "./LivestreamConfigTabPanel";
-import ConfigTabPanel from "./ConfigTabPanel";
-import { NavigateBeforeOutlined } from "@material-ui/icons";
-import { meetingModes } from "../../CONSTS";
+import {Box, capitalize, Dialog, IconButton, Slide, Typography, useTheme, Fade, makeStyles} from '@material-ui/core';
+import React, {useMemo} from 'react';
+import {sideBarModes, appThemes, useMeetingAppContext, sideBarNestedModes} from '../../MeetingAppContextDef';
+import ChatTabPanel from './ChatTabPanel';
+import ParticipantsTabPanel from './ParticipantsTabPanel';
+import CloseIcon from '@material-ui/icons/Close';
+import useIsTab from '../../utils/useIsTab';
+import useIsMobile from '../../utils/useIsMobile';
+import ActivitiesTabPanel from './ActivitiesTabPanel';
+import useResponsiveSize from '../../utils/useResponsiveSize';
+import {useMeeting} from '@videosdk.live/react-sdk';
+import LiveStreamConfigTabPanel from './LivestreamConfigTabPanel';
+import ConfigTabPanel from './ConfigTabPanel';
+import {NavigateBeforeOutlined} from '@material-ui/icons';
+import {meetingModes} from '../../CONSTS';
 
 const useStyles = makeStyles(() => ({
   iconbutton: {
-    "&:hover ": {
-      background: "transparent",
+    '&:hover ': {
+      background: 'transparent',
     },
   },
   iconContainer: {
-    "&:hover $icon": {
-      color: "white",
-      background: "transparent",
+    '&:hover $icon': {
+      color: 'white',
+      background: 'transparent',
     },
   },
   iconContainerLight: {
-    "&:hover $icon": {
-      color: "#404B53",
-      background: "transparent",
+    '&:hover $icon': {
+      color: '#404B53',
+      background: 'transparent',
     },
   },
   icon: {
-    color: "#9FA0A7",
-    background: "transparent",
+    color: '#9FA0A7',
+    background: 'transparent',
   },
 }));
 
-const SideBarTabView = ({ width, height }) => {
+const SideBarTabView = ({width, height}) => {
   const {
     sideBarMode,
     setSideBarMode,
@@ -65,7 +50,7 @@ const SideBarTabView = ({ width, height }) => {
     meetingMode,
     appTheme,
   } = useMeetingAppContext();
-  const { participants } = useMeeting();
+  const {participants} = useMeeting();
   const value =
     sideBarMode === sideBarModes.PARTICIPANTS
       ? 0
@@ -135,7 +120,7 @@ const SideBarTabView = ({ width, height }) => {
                 : theme.palette.background.paper,
             height: paddedHeight,
             borderRadius: 10,
-            overflow: "hidden",
+            overflow: 'hidden',
           }}
         >
           <>
@@ -144,24 +129,24 @@ const SideBarTabView = ({ width, height }) => {
                 style={{
                   padding: panelHeaderPadding,
                   height: panelHeaderHeight - 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  borderBottom: "1px solid #70707033",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  borderBottom: '1px solid #70707033',
                 }}
               >
                 <Box
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
                   {sideBarMode === sideBarModes.ACTIVITIES &&
-                    (sideBarNestedMode === "POLLS" ||
-                      sideBarNestedMode === "CREATE_POLL" ||
-                      sideBarNestedMode === "ADD_LIVE_STREAM" ||
-                      sideBarNestedMode === "VIRTUAL_BACKGROUND") && (
+                    (sideBarNestedMode === 'POLLS' ||
+                      sideBarNestedMode === 'CREATE_POLL' ||
+                      sideBarNestedMode === 'ADD_LIVE_STREAM' ||
+                      sideBarNestedMode === 'VIRTUAL_BACKGROUND') && (
                       <IconButton
                         onClick={() => {
                           setSideBarNestedMode(null);
@@ -170,62 +155,45 @@ const SideBarTabView = ({ width, height }) => {
                         disableRipple
                         disableTouchRipple
                         style={{
-                          cursor: "pointer",
+                          cursor: 'pointer',
                           margin: 0,
                           padding: 0,
                           marginLeft: -4,
                         }}
                         className={classes.iconbutton}
                         classes={{
-                          root:
-                            appTheme === appThemes.LIGHT
-                              ? classes.iconContainerLight
-                              : classes.iconContainer,
+                          root: appTheme === appThemes.LIGHT ? classes.iconContainerLight : classes.iconContainer,
                         }}
                       >
-                        <NavigateBeforeOutlined
-                          fontSize="medium"
-                          className={classes.icon}
-                        />
+                        <NavigateBeforeOutlined fontSize='medium' className={classes.icon} />
                       </IconButton>
                     )}
                   <Typography
-                    variant={"body1"}
+                    variant={'body1'}
                     style={{
-                      fontWeight: "bold",
-                      color:
-                        appTheme === appThemes.LIGHT &&
-                        theme.palette.lightTheme.contrastText,
+                      fontWeight: 'bold',
+                      color: appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText,
                     }}
                   >
-                    {sideBarMode === "PARTICIPANTS"
-                      ? `${capitalize(
-                          String(sideBarMode || "").toLowerCase()
-                        )} (${new Map(participants)?.size})`
-                      : sideBarMode === "ADD_LIVE_STREAM" ||
-                        sideBarNestedMode === "ADD_LIVE_STREAM"
-                      ? "Add Live Streams"
-                      : sideBarMode === "ACTIVITIES" &&
-                        sideBarNestedMode === "POLLS"
+                    {sideBarMode === 'PARTICIPANTS'
+                      ? `Participantes (${new Map(participants)?.size})`
+                      : sideBarMode === 'ADD_LIVE_STREAM' || sideBarNestedMode === 'ADD_LIVE_STREAM'
+                      ? 'Añadir Live Stream'
+                      : sideBarMode === 'ACTIVITIES' && sideBarNestedMode === 'POLLS'
                       ? polls.length >= 1 || draftPolls.length >= 1
                         ? `Polls (${polls.length || draftPolls.length})`
-                        : sideBarNestedMode === "CREATE_POLL" &&
-                          sideBarMode === "ACTIVITIES"
-                        ? "Create a poll"
-                        : canCreatePoll &&
-                          sideBarMode === "ACTIVITIES" &&
-                          meetingMode !== meetingModes.VIEWER
-                        ? "Create a poll"
-                        : `Polls ${polls.length > 0 ? `(${polls.length})` : ""}`
-                      : sideBarNestedMode === "CREATE_POLL" &&
-                        sideBarMode === "ACTIVITIES"
-                      ? "Create a poll"
-                      : sideBarMode === "ACTIVITIES"
-                      ? sideBarNestedMode ===
-                        sideBarNestedModes.VIRTUAL_BACKGROUND
-                        ? "Virtual Background (BETA)"
-                        : "More Options"
-                      : capitalize(String(sideBarMode || "").toLowerCase())}
+                        : sideBarNestedMode === 'CREATE_POLL' && sideBarMode === 'ACTIVITIES'
+                        ? 'Create a poll'
+                        : canCreatePoll && sideBarMode === 'ACTIVITIES' && meetingMode !== meetingModes.VIEWER
+                        ? 'Create a poll'
+                        : `Polls ${polls.length > 0 ? `(${polls.length})` : ''}`
+                      : sideBarNestedMode === 'CREATE_POLL' && sideBarMode === 'ACTIVITIES'
+                      ? 'Create a poll'
+                      : sideBarMode === 'ACTIVITIES'
+                      ? sideBarNestedMode === sideBarNestedModes.VIRTUAL_BACKGROUND
+                        ? 'Fondo Virtual (BETA)'
+                        : 'Más Opciones'
+                      : capitalize(String(sideBarMode || '').toLowerCase())}
                   </Typography>
                 </Box>
                 <Box>
@@ -236,28 +204,25 @@ const SideBarTabView = ({ width, height }) => {
                     disableTouchRipple
                     className={classes.iconbutton}
                     classes={{
-                      root:
-                        appTheme === appThemes.LIGHT
-                          ? classes.iconContainerLight
-                          : classes.iconContainer,
+                      root: appTheme === appThemes.LIGHT ? classes.iconContainerLight : classes.iconContainer,
                     }}
-                    style={{ padding: 0, margin: 0 }}
+                    style={{padding: 0, margin: 0}}
                   >
-                    <CloseIcon fontSize={"small"} className={classes.icon} />
+                    <CloseIcon fontSize={'small'} className={classes.icon} />
                   </IconButton>
                 </Box>
               </Box>
             )}
             {value === 0 ? (
-              <ParticipantsTabPanel {...{ panelHeight, panelWidth: width }} />
+              <ParticipantsTabPanel {...{panelHeight, panelWidth: width}} />
             ) : value === 1 ? (
-              <ChatTabPanel {...{ panelHeight }} />
+              <ChatTabPanel {...{panelHeight}} />
             ) : value === 2 ? (
-              <ActivitiesTabPanel {...{ panelHeight }} />
+              <ActivitiesTabPanel {...{panelHeight}} />
             ) : value === 3 ? (
-              <LiveStreamConfigTabPanel {...{ panelHeight }} />
+              <LiveStreamConfigTabPanel {...{panelHeight}} />
             ) : value === 4 ? (
-              <ConfigTabPanel {...{ panelHeight }} />
+              <ConfigTabPanel {...{panelHeight}} />
             ) : null}
           </>
         </div>
@@ -267,21 +232,15 @@ const SideBarTabView = ({ width, height }) => {
 };
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction='up' ref={ref} {...props} />;
 });
 
-const SideViewContainer = ({ topBarHeight, width, height }) => {
-  const {
-    sideBarMode,
-    setSideBarMode,
-    endCallContainerRef,
-    animationsEnabled,
-    appTheme,
-  } = useMeetingAppContext();
+const SideViewContainer = ({topBarHeight, width, height}) => {
+  const {sideBarMode, setSideBarMode, endCallContainerRef, animationsEnabled, appTheme} = useMeetingAppContext();
   const isTab = useIsTab();
   const isMobile = useIsMobile();
 
-  const isOpen = useMemo(() => typeof sideBarMode === "string", [sideBarMode]);
+  const isOpen = useMemo(() => typeof sideBarMode === 'string', [sideBarMode]);
 
   const handleClose = () => {
     setSideBarMode(null);
@@ -298,21 +257,21 @@ const SideViewContainer = ({ topBarHeight, width, height }) => {
       onClose={handleClose}
       TransitionComponent={Transition}
     >
-      <SideBarTabView {...{ width, height: height + topBarHeight }} />
+      <SideBarTabView {...{width, height: height + topBarHeight}} />
     </Dialog>
   ) : (
     <div
       style={{
         height,
-        position: "relative",
+        position: 'relative',
         width: isOpen ? width : 0,
         transition: `width ${400 * (animationsEnabled ? 1 : 0.5)}ms`,
-        transitionTimingFunction: "ease-in-out",
+        transitionTimingFunction: 'ease-in-out',
       }}
     >
       <div
         style={{
-          position: "absolute",
+          position: 'absolute',
           height,
           width,
           top: 0,
@@ -324,11 +283,11 @@ const SideViewContainer = ({ topBarHeight, width, height }) => {
               ? theme.palette.lightTheme.two
               : theme.palette.background.paper,
           flex: 1,
-          flexDirection: "column",
-          display: "flex",
+          flexDirection: 'column',
+          display: 'flex',
         }}
       >
-        <SideBarTabView {...{ width, height }} />
+        <SideBarTabView {...{width, height}} />
       </div>
     </div>
   );

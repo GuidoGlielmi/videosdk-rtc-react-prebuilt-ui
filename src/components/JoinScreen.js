@@ -1,99 +1,90 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  Tooltip,
-  Typography,
-  useMediaQuery,
-} from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { Videocam, Mic, MicOff, VideocamOff } from "@material-ui/icons";
-import { red } from "@material-ui/core/colors";
-import useResponsiveSize from "../utils/useResponsiveSize";
-import ConfirmBox from "../components/ConfirmBox";
-import { CheckboxIcon } from "../icons";
-import SettingDialogueBox from "./joinScreen/SettingDialogueBox";
-import MeetingDetailModal from "./joinScreen/MeetingDetailModal";
-import useWindowSize from "../utils/useWindowSize";
-import { meetingModes } from "../CONSTS";
-import { appThemes } from "../MeetingAppContextDef";
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Box, Button, Grid, IconButton, Tooltip, Typography, useMediaQuery} from '@material-ui/core';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
+import {Videocam, Mic, MicOff, VideocamOff} from '@material-ui/icons';
+import {red} from '@material-ui/core/colors';
+import useResponsiveSize from '../utils/useResponsiveSize';
+import ConfirmBox from '../components/ConfirmBox';
+import {CheckboxIcon} from '../icons';
+import SettingDialogueBox from './joinScreen/SettingDialogueBox';
+import MeetingDetailModal from './joinScreen/MeetingDetailModal';
+import useWindowSize from '../utils/useWindowSize';
+import {meetingModes} from '../CONSTS';
+import {appThemes} from '../MeetingAppContextDef';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   input: {
     margin: theme.spacing(2, 1),
-    width: "500px",
-    "@media only screen and (max-width: 959.9px)": {
-      width: "340px",
+    width: '500px',
+    '@media only screen and (max-width: 959.9px)': {
+      width: '340px',
     },
   },
 
   video: {
-    borderRadius: "10px",
-    backgroundColor: "#1c1c1c",
-    height: "100%",
-    width: "100%",
-    objectFit: "cover",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    borderRadius: '10px',
+    backgroundColor: '#1c1c1c',
+    height: '100%',
+    width: '100%',
+    objectFit: 'cover',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   toggleButton: {
-    borderRadius: "100%",
-    minWidth: "auto",
-    width: "44px",
-    height: "44px",
+    borderRadius: '100%',
+    minWidth: 'auto',
+    width: '44px',
+    height: '44px',
   },
 
   previewBox: {
-    width: "100%",
-    height: "45vh",
-    position: "relative",
+    width: '100%',
+    height: '45vh',
+    position: 'relative',
   },
 }));
 
-export const DotsBoxContainer = ({ type }) => {
+export const DotsBoxContainer = ({type}) => {
   const theme = useTheme();
-  const gtThenMD = useMediaQuery(theme.breakpoints.up("md"));
+  const gtThenMD = useMediaQuery(theme.breakpoints.up('md'));
 
   return (
     <Box
       style={{
-        position: "absolute",
-        top: type === "top-left" ? 0 : undefined,
-        left: type === "top-left" ? 0 : undefined,
-        bottom: type === "bottom-right" ? 0 : undefined,
-        right: type === "bottom-right" ? 0 : undefined,
+        position: 'absolute',
+        top: type === 'top-left' ? 0 : undefined,
+        left: type === 'top-left' ? 0 : undefined,
+        bottom: type === 'bottom-right' ? 0 : undefined,
+        right: type === 'bottom-right' ? 0 : undefined,
         height: theme.spacing(4 * (gtThenMD ? 3 : 2)),
         width: theme.spacing(4 * (gtThenMD ? 3 : 2)),
-        transform:
-          type === "top-left" ? "translate(-85%,-45%)" : "translate(85%,45%)",
-        display: "flex",
-        flexDirection: "column",
+        transform: type === 'top-left' ? 'translate(-85%,-45%)' : 'translate(85%,45%)',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
-      {[0, 1, 2, 3].map((i) => {
+      {[0, 1, 2, 3].map(i => {
         return (
           <Box
             key={`dots_i_${i}`}
             style={{
-              display: "flex",
+              display: 'flex',
               flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            {[0, 1, 2, 3].map((j) => {
+            {[0, 1, 2, 3].map(j => {
               return (
                 <Box
                   key={`dots_j_${j}`}
                   style={{
                     flex: 1,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                 >
                   <Box
@@ -101,7 +92,7 @@ export const DotsBoxContainer = ({ type }) => {
                       height: gtThenMD ? 6 : 4,
                       width: gtThenMD ? 6 : 4,
                       borderRadius: gtThenMD ? 6 : 4,
-                      backgroundColor: "gray",
+                      backgroundColor: 'gray',
                     }}
                   ></Box>
                 </Box>
@@ -135,11 +126,7 @@ export default function JoinMeeting({
   const [nameErr, setNameErr] = useState(false);
 
   const [setting, setSetting] = useState(
-    participantCanToggleSelfWebcam === "true"
-      ? "video"
-      : participantCanToggleSelfMic === "true"
-      ? "audio"
-      : null
+    participantCanToggleSelfWebcam === 'true' ? 'video' : participantCanToggleSelfMic === 'true' ? 'audio' : null,
   );
 
   const [dlgMuted, setDlgMuted] = useState(false);
@@ -151,7 +138,7 @@ export default function JoinMeeting({
     setSettingDialogueOpen(true);
   };
 
-  const handleClose = (value) => {
+  const handleClose = value => {
     setSettingDialogueOpen(false);
   };
 
@@ -162,7 +149,7 @@ export default function JoinMeeting({
     };
   }, []);
 
-  const [{ webcams, mics }, setDevices] = useState({
+  const [{webcams, mics}, setDevices] = useState({
     devices: [],
     webcams: [],
     mics: [],
@@ -185,18 +172,15 @@ export default function JoinMeeting({
   const videoTrackRef = useRef();
   const audioTrackRef = useRef();
 
-  const { width: windowWidth } = useWindowSize();
+  const {width: windowWidth} = useWindowSize();
 
   useEffect(() => {
-    if (
-      videoPlayerRef.current &&
-      videoPlayerRef.current.offsetHeight !== boxHeight
-    ) {
+    if (videoPlayerRef.current && videoPlayerRef.current.offsetHeight !== boxHeight) {
       setBoxHeight(videoPlayerRef.current.offsetHeight);
     }
   }, [windowWidth, boxHeight]);
 
-  const changeWebcam = async (deviceId) => {
+  const changeWebcam = async deviceId => {
     const currentvideoTrack = videoTrackRef.current;
 
     if (currentvideoTrack) {
@@ -204,7 +188,7 @@ export default function JoinMeeting({
     }
 
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { deviceId },
+      video: {deviceId},
     });
     const videoTracks = stream.getVideoTracks();
 
@@ -212,11 +196,11 @@ export default function JoinMeeting({
 
     setVideoTrack(videoTrack);
   };
-  const changeMic = async (deviceId) => {
+  const changeMic = async deviceId => {
     const currentAudioTrack = audioTrackRef.current;
     currentAudioTrack && currentAudioTrack.stop();
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: { deviceId },
+      audio: {deviceId},
     });
     const audioTracks = stream.getAudioTracks();
 
@@ -225,15 +209,13 @@ export default function JoinMeeting({
 
     setAudioTrack(audioTrack);
   };
-  const getDefaultMediaTracks = async ({ mic, webcam, firstTime }) => {
+  const getDefaultMediaTracks = async ({mic, webcam, firstTime}) => {
     if (mic) {
       const audioConstraints = {
         audio: true,
       };
 
-      const stream = await navigator.mediaDevices.getUserMedia(
-        audioConstraints
-      );
+      const stream = await navigator.mediaDevices.getUserMedia(audioConstraints);
       const audioTracks = stream.getAudioTracks();
 
       const audioTrack = audioTracks.length ? audioTracks[0] : null;
@@ -254,9 +236,7 @@ export default function JoinMeeting({
         },
       };
 
-      const stream = await navigator.mediaDevices.getUserMedia(
-        videoConstraints
-      );
+      const stream = await navigator.mediaDevices.getUserMedia(videoConstraints);
       const videoTracks = stream.getVideoTracks();
 
       const videoTrack = videoTracks.length ? videoTracks[0] : null;
@@ -276,23 +256,23 @@ export default function JoinMeeting({
         setDlgMuted(true);
       }
 
-      currentAudioTrack.addEventListener("mute", (ev) => {
+      currentAudioTrack.addEventListener('mute', ev => {
         setDlgMuted(true);
       });
     }
   }
 
-  const getDevices = async ({ micEnabled, webcamEnabled }) => {
+  const getDevices = async ({micEnabled, webcamEnabled}) => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
 
-      const webcams = devices.filter((d) => d.kind === "videoinput");
-      const mics = devices.filter((d) => d.kind === "audioinput");
+      const webcams = devices.filter(d => d.kind === 'videoinput');
+      const mics = devices.filter(d => d.kind === 'audioinput');
 
       const hasMic = mics.length > 0;
       const hasWebcam = webcams.length > 0;
 
-      setDevices({ webcams, mics, devices });
+      setDevices({webcams, mics, devices});
 
       if (hasMic) {
         startMuteListener();
@@ -320,7 +300,7 @@ export default function JoinMeeting({
     const videoTrack = videoTrackRef.current;
 
     if (!videoTrack) {
-      getDefaultMediaTracks({ mic: false, webcam: true });
+      getDefaultMediaTracks({mic: false, webcam: true});
     }
   };
 
@@ -346,7 +326,7 @@ export default function JoinMeeting({
     const audioTrack = audioTrackRef.current;
 
     if (!audioTrack) {
-      getDefaultMediaTracks({ mic: true, webcam: false });
+      getDefaultMediaTracks({mic: true, webcam: false});
     }
   };
   const _handleToggleMic = () => {
@@ -393,7 +373,7 @@ export default function JoinMeeting({
   }, [audioTrack]);
 
   useEffect(() => {
-    getDevices({ micEnabled, webcamEnabled });
+    getDevices({micEnabled, webcamEnabled});
   }, []);
 
   const padding = useResponsiveSize({
@@ -420,26 +400,24 @@ export default function JoinMeeting({
     xs: 32,
   };
 
-  const spacingHorizontalTopics = useResponsiveSize(
-    spacingHorizontalTopicsObject
-  );
+  const spacingHorizontalTopics = useResponsiveSize(spacingHorizontalTopicsObject);
 
-  const isXStoSM = useMediaQuery(theme.breakpoints.between("xs", "sm"));
-  const gtThenMD = useMediaQuery(theme.breakpoints.up("md"));
-  const gtThenXL = useMediaQuery(theme.breakpoints.only("xl"));
+  const isXStoSM = useMediaQuery(theme.breakpoints.between('xs', 'sm'));
+  const gtThenMD = useMediaQuery(theme.breakpoints.up('md'));
+  const gtThenXL = useMediaQuery(theme.breakpoints.only('xl'));
 
-  const isXSOnly = useMediaQuery(theme.breakpoints.only("xs"));
-  const isSMOnly = useMediaQuery(theme.breakpoints.only("sm"));
-  const isXLOnly = useMediaQuery(theme.breakpoints.only("xl"));
+  const isXSOnly = useMediaQuery(theme.breakpoints.only('xs'));
+  const isSMOnly = useMediaQuery(theme.breakpoints.only('sm'));
+  const isXLOnly = useMediaQuery(theme.breakpoints.only('xl'));
 
   return (
     <>
       <Box
         style={{
-          display: "flex",
+          display: 'flex',
           flex: 1,
-          flexDirection: "column",
-          height: "100vh",
+          flexDirection: 'column',
+          height: '100vh',
           backgroundColor:
             appTheme === appThemes.DARK
               ? theme.palette.darkTheme.main
@@ -451,30 +429,22 @@ export default function JoinMeeting({
         <Box
           m={9}
           style={{
-            display: "flex",
+            display: 'flex',
             flex: 1,
-            flexDirection: isXStoSM
-              ? "column"
-              : meetingUrl === "" || meetingTitle === ""
-              ? "row"
-              : "column",
-            justifyContent: "center",
-            alignItems: "center",
+            flexDirection: isXStoSM ? 'column' : meetingUrl === '' || meetingTitle === '' ? 'row' : 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           <Grid
             container
             spacing={padding}
             style={{
-              display: "flex",
+              display: 'flex',
               flex: isSMOnly ? 0 : 1,
-              flexDirection: isXStoSM
-                ? "column"
-                : meetingUrl || meetingTitle
-                ? "row"
-                : "column",
-              alignItems: "center",
-              justifyContent: "center",
+              flexDirection: isXStoSM ? 'column' : meetingUrl || meetingTitle ? 'row' : 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Grid
@@ -482,45 +452,41 @@ export default function JoinMeeting({
               xs={12}
               md={gtThenXL ? 6 : 7}
               style={{
-                display: "flex",
+                display: 'flex',
                 flex: 1,
               }}
             >
               <Box
                 style={{
-                  width: isXSOnly ? "100%" : "100vw",
+                  width: isXSOnly ? '100%' : '100vw',
                   // isXSOnly ? "100%" : isSMOnly ? "96%" : "100vw",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
                 p={internalPadding}
               >
                 <Box
                   style={{
-                    paddingLeft:
-                      spacingHorizontalTopics -
-                      (gtThenMD ? theme.spacing(4) : theme.spacing(2)),
-                    paddingRight:
-                      spacingHorizontalTopics -
-                      (gtThenMD ? theme.spacing(4) : theme.spacing(2)),
+                    paddingLeft: spacingHorizontalTopics - (gtThenMD ? theme.spacing(4) : theme.spacing(2)),
+                    paddingRight: spacingHorizontalTopics - (gtThenMD ? theme.spacing(4) : theme.spacing(2)),
 
-                    position: "relative",
-                    width: "100%",
+                    position: 'relative',
+                    width: '100%',
                   }}
                 >
                   <Box
                     style={{
-                      position: "absolute",
+                      position: 'absolute',
                       top: 0,
                       bottom: 0,
                       left: spacingHorizontalTopics,
                       right: spacingHorizontalTopics,
                     }}
                   >
-                    <DotsBoxContainer type={"top-left"} />
-                    <DotsBoxContainer type={"bottom-right"} />
+                    <DotsBoxContainer type={'top-left'} />
+                    <DotsBoxContainer type={'bottom-right'} />
                   </Box>
 
                   <Box>
@@ -531,41 +497,37 @@ export default function JoinMeeting({
                         muted
                         ref={videoPlayerRef}
                         controls={false}
-                        className={classes.video + " flip"}
+                        className={classes.video + ' flip'}
                       />
 
                       {!isXSOnly ? (
                         <>
                           <Box
                             style={{
-                              position: "absolute",
+                              position: 'absolute',
                               top: 0,
                               bottom: 0,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
                               right: 0,
                               left: 0,
                             }}
                           >
-                            {participantCanToggleSelfWebcam === "false" &&
-                            !webcamOn ? (
-                              <Typography variant={isXLOnly ? "h5" : "h6"}>
+                            {participantCanToggleSelfWebcam === 'false' && !webcamOn ? (
+                              <Typography variant={isXLOnly ? 'h5' : 'h6'}>
                                 {mode === meetingModes.VIEWER
-                                  ? "You are not permitted to use your microphone and camera."
-                                  : "You are not allowed to turn on your camera"}
+                                  ? 'You are not permitted to use your microphone and camera.'
+                                  : 'You are not allowed to turn on your camera'}
                               </Typography>
                             ) : !webcamOn ? (
-                              <Typography variant={isXLOnly ? "h4" : "h6"}>
-                                The camera is off
-                              </Typography>
+                              <Typography variant={isXLOnly ? 'h4' : 'h6'}>The camera is off</Typography>
                             ) : null}
                           </Box>
-                          {participantCanToggleSelfWebcam === "true" ||
-                          participantCanToggleSelfMic === "true" ? (
+                          {participantCanToggleSelfWebcam === 'true' || participantCanToggleSelfMic === 'true' ? (
                             <Box
                               style={{
-                                position: "absolute",
+                                position: 'absolute',
                                 top: 0,
                                 right: 0,
                                 backgroundColor:
@@ -573,21 +535,21 @@ export default function JoinMeeting({
                                     ? theme.palette.darkTheme.seven
                                     : appTheme === appThemes.LIGHT
                                     ? theme.palette.lightTheme.three
-                                    : "#1C1F2E80",
+                                    : '#1C1F2E80',
                                 borderRadius: 4,
-                                cursor: "pointer",
+                                cursor: 'pointer',
                               }}
                               m={2}
-                              onClick={(e) => {
+                              onClick={e => {
                                 handleClickOpen();
                               }}
                             >
                               <Box
                                 style={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  alignItems: "center",
-                                  justifyContent: "center",
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
                                 }}
                                 m={0.5}
                               >
@@ -598,20 +560,14 @@ export default function JoinMeeting({
                                   }}
                                 >
                                   <CheckboxIcon
-                                    fill={
-                                      appTheme === appThemes.LIGHT
-                                        ? theme.palette.lightTheme.contrastText
-                                        : "#fff"
-                                    }
+                                    fill={appTheme === appThemes.LIGHT ? theme.palette.lightTheme.contrastText : '#fff'}
                                   />
                                 </IconButton>
                                 <Typography
-                                  variant="subtitle1"
+                                  variant='subtitle1'
                                   style={{
                                     marginLeft: 4,
-                                    color:
-                                      appTheme === appThemes.LIGHT &&
-                                      theme.palette.lightTheme.contrastText,
+                                    color: appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText,
                                   }}
                                 >
                                   Check your audio and video
@@ -638,44 +594,26 @@ export default function JoinMeeting({
                           setSelectedWebcam={setSelectedWebcam}
                           videoTrack={videoTrack}
                           audioTrack={audioTrack}
-                          participantCanToggleSelfMic={
-                            participantCanToggleSelfMic
-                          }
-                          participantCanToggleSelfWebcam={
-                            participantCanToggleSelfWebcam
-                          }
+                          participantCanToggleSelfMic={participantCanToggleSelfMic}
+                          participantCanToggleSelfWebcam={participantCanToggleSelfWebcam}
                           appTheme={appTheme}
                         />
                       ) : null}
 
-                      <Box
-                        position="absolute"
-                        bottom={theme.spacing(2)}
-                        left="0"
-                        right="0"
-                      >
-                        <Grid
-                          container
-                          alignItems="center"
-                          justify="center"
-                          spacing={2}
-                        >
-                          {participantCanToggleSelfMic === "true" ? (
+                      <Box position='absolute' bottom={theme.spacing(2)} left='0' right='0'>
+                        <Grid container alignItems='center' justify='center' spacing={2}>
+                          {participantCanToggleSelfMic === 'true' ? (
                             <Grid item>
-                              <Tooltip
-                                title={micOn ? "Turn off mic" : "Turn on mic"}
-                                arrow
-                                placement="top"
-                              >
+                              <Tooltip title={micOn ? 'Apagar micrófono' : 'Prender micrófono'} arrow placement='top'>
                                 <Button
                                   onClick={() => _handleToggleMic()}
-                                  variant="contained"
+                                  variant='contained'
                                   style={
                                     micOn
                                       ? {}
                                       : {
                                           backgroundColor: red[500],
-                                          color: "white",
+                                          color: 'white',
                                         }
                                   }
                                   className={classes.toggleButton}
@@ -686,26 +624,18 @@ export default function JoinMeeting({
                             </Grid>
                           ) : null}
 
-                          {participantCanToggleSelfWebcam === "true" ? (
+                          {participantCanToggleSelfWebcam === 'true' ? (
                             <Grid item>
-                              <Tooltip
-                                title={
-                                  webcamOn
-                                    ? "Turn off camera"
-                                    : "Turn on camera"
-                                }
-                                arrow
-                                placement="top"
-                              >
+                              <Tooltip title={webcamOn ? 'Turn off camera' : 'Turn on camera'} arrow placement='top'>
                                 <Button
                                   onClick={() => _toggleWebcam()}
-                                  variant="contained"
+                                  variant='contained'
                                   style={
                                     webcamOn
                                       ? {}
                                       : {
                                           backgroundColor: red[500],
-                                          color: "white",
+                                          color: 'white',
                                         }
                                   }
                                   className={classes.toggleButton}
@@ -727,21 +657,21 @@ export default function JoinMeeting({
               xs={12}
               md={isXStoSM ? 5 : meetingTitle || meetingUrl ? 5 : 6}
               style={{
-                width: "100%",
-                display: "flex",
+                width: '100%',
+                display: 'flex',
                 flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
               <Box
                 style={{
-                  width: "100%",
-                  display: "flex",
+                  width: '100%',
+                  display: 'flex',
                   flex: 1,
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <MeetingDetailModal
@@ -754,7 +684,7 @@ export default function JoinMeeting({
                   setNameErr={setNameErr}
                   isXStoSM={isXStoSM}
                   startMeeting={() => {
-                    onClick({ name, webcamOn, micOn });
+                    onClick({name, webcamOn, micOn});
                   }}
                   isXLOnly={isXLOnly}
                   appTheme={appTheme}
@@ -766,11 +696,11 @@ export default function JoinMeeting({
           <ConfirmBox
             appTheme={appTheme}
             open={dlgMuted}
-            successText="OKAY"
+            successText='OKAY'
             onSuccess={() => {
               setDlgMuted(false);
             }}
-            title="System mic is muted"
+            title='System mic is muted'
             subTitle="You're default microphone is muted, please unmute it or increase audio
             input volume from system settings."
           />
@@ -778,12 +708,12 @@ export default function JoinMeeting({
           <ConfirmBox
             appTheme={appTheme}
             open={dlgDevices}
-            successText="DISMISS"
+            successText='DISMISS'
             onSuccess={() => {
               setDlgDevices(false);
             }}
-            title="Mic or webcam not available"
-            subTitle="Please connect a mic and webcam to speak and share your video in the meeting. You can also join without them."
+            title='Mic or webcam not available'
+            subTitle='Please connect a mic and webcam to speak and share your video in the meeting. You can also join without them.'
           />
         </Box>
       </Box>

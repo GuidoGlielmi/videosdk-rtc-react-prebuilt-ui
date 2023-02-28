@@ -1,31 +1,20 @@
-import React from "react";
-import {
-  ButtonBase,
-  List,
-  ListItem,
-  ListItemAvatar,
-  useTheme,
-} from "@material-ui/core";
-import PollIcon from "../../icons/PollIcon";
-import useResponsiveSize from "../../utils/useResponsiveSize";
-import CreatePoll from "../../components/pollContainer/CreatePoll";
-import {
-  sideBarNestedModes,
-  appThemes,
-  useMeetingAppContext,
-  sideBarModes,
-} from "../../MeetingAppContextDef";
-import PollList from "../../components/pollContainer/PollList";
-import SubmitPollList from "../../components/pollContainer/SubmitPollList";
-import { meetingModes } from "../../CONSTS";
-import { useMeeting } from "@videosdk.live/react-sdk";
-import WhiteboardIcon from "../../icons/WhiteboardIcon";
-import AddLiveStreamsIcon from "../../icons/AddLiveStreamsIcon";
-import LiveStreamConfigTabPanel from "./LivestreamConfigTabPanel";
-import VirtualBackgroundIcon from "../../icons/VirtualBackgroundIcon";
-import VirtualBackgroundContainer from "./VirtualBackgroundTabPanel/VirtualBackgroundContainer";
+import React from 'react';
+import {ButtonBase, List, ListItem, ListItemAvatar, useTheme} from '@material-ui/core';
+import PollIcon from '../../icons/PollIcon';
+import useResponsiveSize from '../../utils/useResponsiveSize';
+import CreatePoll from '../../components/pollContainer/CreatePoll';
+import {sideBarNestedModes, appThemes, useMeetingAppContext, sideBarModes} from '../../MeetingAppContextDef';
+import PollList from '../../components/pollContainer/PollList';
+import SubmitPollList from '../../components/pollContainer/SubmitPollList';
+import {meetingModes} from '../../CONSTS';
+import {useMeeting} from '@videosdk.live/react-sdk';
+import WhiteboardIcon from '../../icons/WhiteboardIcon';
+import AddLiveStreamsIcon from '../../icons/AddLiveStreamsIcon';
+import LiveStreamConfigTabPanel from './LivestreamConfigTabPanel';
+import VirtualBackgroundIcon from '../../icons/VirtualBackgroundIcon';
+import VirtualBackgroundContainer from './VirtualBackgroundTabPanel/VirtualBackgroundContainer';
 
-const ActivitiesTabPanel = ({ panelHeight }) => {
+const ActivitiesTabPanel = ({panelHeight}) => {
   const theme = useTheme();
 
   const listPadding = useResponsiveSize({
@@ -58,26 +47,26 @@ const ActivitiesTabPanel = ({ panelHeight }) => {
   return sideBarNestedMode === sideBarNestedModes.POLLS ? (
     canCreatePoll && meetingMode !== meetingModes.VIEWER ? (
       polls.length === 0 && draftPolls.length === 0 ? (
-        <CreatePoll {...{ panelHeight }} />
+        <CreatePoll {...{panelHeight}} />
       ) : (
-        <PollList {...{ panelHeight }} />
+        <PollList {...{panelHeight}} />
       )
     ) : (
-      <SubmitPollList {...{ panelHeight }} />
+      <SubmitPollList {...{panelHeight}} />
     )
   ) : sideBarNestedMode === sideBarNestedModes.CREATE_POLL ? (
-    <CreatePoll {...{ panelHeight }} />
+    <CreatePoll {...{panelHeight}} />
   ) : sideBarNestedMode === sideBarNestedModes.ADD_LIVE_STREAM ? (
-    <LiveStreamConfigTabPanel {...{ panelHeight }} />
+    <LiveStreamConfigTabPanel {...{panelHeight}} />
   ) : sideBarNestedMode === sideBarNestedModes.VIRTUAL_BACKGROUND ? (
-    <VirtualBackgroundContainer {...{ panelHeight }} />
+    <VirtualBackgroundContainer {...{panelHeight}} />
   ) : (
-    <List style={{ padding: listPadding }}>
+    <List style={{padding: listPadding}}>
       {[
         {
           Icon: VirtualBackgroundIcon,
-          primary: "Virtual Background (BETA)",
-          secondary: "Add custom background to meetings",
+          primary: 'Fondo Virtual (BETA)',
+          secondary: 'Añadir fondos personalizados a las reuniones',
           disabled: false,
           displayed: true,
           onClick: () => {
@@ -86,24 +75,21 @@ const ActivitiesTabPanel = ({ panelHeight }) => {
         },
         {
           Icon: WhiteboardIcon,
-          primary: "Whiteboard",
-          secondary: "Brainstorm, share idea & collaborate ",
+          primary: 'Whiteboard',
+          secondary: 'Brainstorm, share idea & collaborate ',
           disabled: presenterId || !canToggleWhiteboard,
-          displayed:
-            whiteboardEnabled && meetingMode === meetingModes.CONFERENCE
-              ? true
-              : false,
+          displayed: whiteboardEnabled && meetingMode === meetingModes.CONFERENCE ? true : false,
           onClick: () => {
             mMeeting.meeting.startWhiteboard();
-            setSideBarMode((s) => s === sideBarModes.ACTIVITIES && null);
+            setSideBarMode(s => s === sideBarModes.ACTIVITIES && null);
             setSideBarNestedMode(null);
           },
         },
         {
           Icon: PollIcon,
-          primary: "Polls",
+          primary: 'Polls',
           displayed: pollEnabled,
-          secondary: "Find out participant’s opinion.",
+          secondary: 'Find out participant’s opinion.',
           disabled: false,
           onClick: () => {
             setSideBarNestedMode(sideBarNestedModes.POLLS);
@@ -112,8 +98,8 @@ const ActivitiesTabPanel = ({ panelHeight }) => {
 
         {
           Icon: AddLiveStreamsIcon,
-          primary: "Add Live Streams",
-          secondary: "Broadcast live stream to other platforms",
+          primary: 'Añadir Live Stream',
+          secondary: 'Transmitir en vivo a otras plataformas',
           disabled: !participantCanToggleLivestream,
           displayed: true,
           onClick: () => {
@@ -121,22 +107,22 @@ const ActivitiesTabPanel = ({ panelHeight }) => {
           },
         },
       ].map(
-        ({ Icon, primary, secondary, disabled, displayed, onClick }, i) =>
+        ({Icon, primary, secondary, disabled, displayed, onClick}, i) =>
           displayed && (
             <ButtonBase
               disabled={disabled}
               onClick={onClick}
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 backgroundColor:
                   appTheme === appThemes.DARK
                     ? theme.palette.darkTheme.seven
                     : appTheme === appThemes.LIGHT
                     ? theme.palette.lightTheme.three
                     : theme.palette.common.sidePanel,
-                width: "100%",
+                width: '100%',
                 marginBottom: 12,
                 borderRadius: 4,
               }}
@@ -198,7 +184,7 @@ const ActivitiesTabPanel = ({ panelHeight }) => {
                 </div>
               </ListItem>
             </ButtonBase>
-          )
+          ),
       )}
     </List>
   );

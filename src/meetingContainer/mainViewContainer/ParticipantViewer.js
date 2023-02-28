@@ -1,45 +1,32 @@
-import {
-  Box,
-  makeStyles,
-  Popover,
-  Typography,
-  useTheme,
-} from "@material-ui/core";
-import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
-import React, { useEffect, useRef, useMemo, useState } from "react";
-import { MicOff } from "../../icons";
-import { IconButton } from "@material-ui/core";
-import { appThemes, useMeetingAppContext } from "../../MeetingAppContextDef";
-import {
-  invertColor,
-  getRandomColor,
-  eventEmitter,
-  appEvents,
-  nameTructed,
-  getQualityScore,
-} from "../../utils/common";
-import useIsMobile from "../../utils/useIsMobile";
-import useIsTab from "../../utils/useIsTab";
-import VisibilitySensor from "react-visibility-sensor";
-import useResponsiveSize from "../../utils/useResponsiveSize";
-import Lottie from "react-lottie";
-import animationData from "../../animations/equaliser.json";
-import circleRipple from "../../animations/circleRipple.json";
-import { Pin } from "../../icons";
-import useIsLGDesktop from "../../utils/useIsLGDesktop";
-import ReactPlayer from "react-player";
-import NetworkIcon from "../../icons/NetworkIcon";
-import { CloseOutlined } from "@material-ui/icons";
+import {Box, makeStyles, Popover, Typography, useTheme} from '@material-ui/core';
+import {useMeeting, useParticipant} from '@videosdk.live/react-sdk';
+import React, {useEffect, useRef, useMemo, useState} from 'react';
+import {MicOff} from '../../icons';
+import {IconButton} from '@material-ui/core';
+import {appThemes, useMeetingAppContext} from '../../MeetingAppContextDef';
+import {invertColor, getRandomColor, eventEmitter, appEvents, nameTructed, getQualityScore} from '../../utils/common';
+import useIsMobile from '../../utils/useIsMobile';
+import useIsTab from '../../utils/useIsTab';
+import VisibilitySensor from 'react-visibility-sensor';
+import useResponsiveSize from '../../utils/useResponsiveSize';
+import Lottie from 'react-lottie';
+import animationData from '../../animations/equaliser.json';
+import circleRipple from '../../animations/circleRipple.json';
+import {Pin} from '../../icons';
+import useIsLGDesktop from '../../utils/useIsLGDesktop';
+import ReactPlayer from 'react-player';
+import NetworkIcon from '../../icons/NetworkIcon';
+import {CloseOutlined} from '@material-ui/icons';
 
 const useStyles = makeStyles({
   popoverHover: {
-    "&:hover": {
-      backgroundColor: "#CCD2D899",
+    '&:hover': {
+      backgroundColor: '#CCD2D899',
     },
   },
   popoverHoverDark: {
-    "&:hover": {
-      backgroundColor: "#2B303499",
+    '&:hover': {
+      backgroundColor: '#2B303499',
     },
   },
 });
@@ -64,7 +51,7 @@ export const CornerDisplayName = ({
   const isLGDesktop = useIsLGDesktop();
 
   const [downArrow, setDownArrow] = useState(null);
-  const handleClick = (event) => {
+  const handleClick = event => {
     setDownArrow(event.currentTarget);
   };
 
@@ -72,21 +59,15 @@ export const CornerDisplayName = ({
     setDownArrow(null);
   };
 
-  const {
-    overlaidInfoVisible,
-    canPin,
-    animationsEnabled,
-    alwaysShowOverlay,
-    networkBarEnabled,
-    appTheme,
-  } = useMeetingAppContext();
+  const {overlaidInfoVisible, canPin, animationsEnabled, alwaysShowOverlay, networkBarEnabled, appTheme} =
+    useMeetingAppContext();
 
   const defaultOptions = {
     loop: true,
     autoplay: true,
     animationData: animationData,
     rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
+      preserveAspectRatio: 'xMidYMid slice',
     },
   };
 
@@ -99,26 +80,19 @@ export const CornerDisplayName = ({
   });
 
   const show = useMemo(
-    () =>
-      alwaysShowOverlay || mouseOver || isActiveSpeaker || overlaidInfoVisible,
-    [alwaysShowOverlay, mouseOver, isActiveSpeaker, overlaidInfoVisible]
+    () => alwaysShowOverlay || mouseOver || isActiveSpeaker || overlaidInfoVisible,
+    [alwaysShowOverlay, mouseOver, isActiveSpeaker, overlaidInfoVisible],
   );
 
   const isPinned = useMemo(() => pinState?.share || pinState?.cam, [pinState]);
 
   const showPin = useMemo(
     () => (alwaysShowOverlay ? isPinned : isPinned || mouseOver),
-    [alwaysShowOverlay, isPinned, mouseOver]
+    [alwaysShowOverlay, isPinned, mouseOver],
   );
 
-  const {
-    webcamStream,
-    micStream,
-    getVideoStats,
-    getAudioStats,
-    getShareStats,
-    screenShareStream,
-  } = useParticipant(participantId);
+  const {webcamStream, micStream, getVideoStats, getAudioStats, getShareStats, screenShareStream} =
+    useParticipant(participantId);
 
   const statsIntervalIdRef = useRef();
   const [score, setScore] = useState({});
@@ -143,11 +117,7 @@ export const CornerDisplayName = ({
     }
 
     // setScore(stats?.score);
-    let score = stats
-      ? stats.length > 0
-        ? getQualityScore(stats[0])
-        : 100
-      : 100;
+    let score = stats ? (stats.length > 0 ? getQualityScore(stats[0]) : 100) : 100;
 
     setScore(score);
     setAudioStats(audioStats);
@@ -155,100 +125,76 @@ export const CornerDisplayName = ({
   };
 
   const qualityStateArray = [
-    { label: "", audio: "Audio", video: "Video" },
+    {label: '', audio: 'Audio', video: 'Video'},
     {
-      label: "Latency",
-      audio:
-        audioStats && audioStats[0]?.rtt ? `${audioStats[0]?.rtt} ms` : "-",
-      video:
-        videoStats && videoStats[0]?.rtt ? `${videoStats[0]?.rtt} ms` : "-",
+      label: 'Latency',
+      audio: audioStats && audioStats[0]?.rtt ? `${audioStats[0]?.rtt} ms` : '-',
+      video: videoStats && videoStats[0]?.rtt ? `${videoStats[0]?.rtt} ms` : '-',
     },
     {
-      label: "Jitter",
-      audio:
-        audioStats && audioStats[0]?.jitter
-          ? `${parseFloat(audioStats[0]?.jitter).toFixed(2)} ms`
-          : "-",
-      video:
-        videoStats && videoStats[0]?.jitter
-          ? `${parseFloat(videoStats[0]?.jitter).toFixed(2)} ms`
-          : "-",
+      label: 'Jitter',
+      audio: audioStats && audioStats[0]?.jitter ? `${parseFloat(audioStats[0]?.jitter).toFixed(2)} ms` : '-',
+      video: videoStats && videoStats[0]?.jitter ? `${parseFloat(videoStats[0]?.jitter).toFixed(2)} ms` : '-',
     },
     {
-      label: "Packet Loss",
+      label: 'Packet Loss',
       audio: audioStats
         ? audioStats[0]?.packetsLost
-          ? `${parseFloat(
-              (audioStats[0]?.packetsLost * 100) / audioStats[0]?.totalPackets
-            ).toFixed(2)}%`
-          : "-"
-        : "-",
+          ? `${parseFloat((audioStats[0]?.packetsLost * 100) / audioStats[0]?.totalPackets).toFixed(2)}%`
+          : '-'
+        : '-',
       video: videoStats
         ? videoStats[0]?.packetsLost
-          ? `${parseFloat(
-              (videoStats[0]?.packetsLost * 100) / videoStats[0]?.totalPackets
-            ).toFixed(2)}%`
-          : "-"
-        : "-",
+          ? `${parseFloat((videoStats[0]?.packetsLost * 100) / videoStats[0]?.totalPackets).toFixed(2)}%`
+          : '-'
+        : '-',
     },
     {
-      label: "Bitrate",
-      audio:
-        audioStats && audioStats[0]?.bitrate
-          ? `${parseFloat(audioStats[0]?.bitrate).toFixed(2)} kb/s`
-          : "-",
+      label: 'Bitrate',
+      audio: audioStats && audioStats[0]?.bitrate ? `${parseFloat(audioStats[0]?.bitrate).toFixed(2)} kb/s` : '-',
+      video: videoStats && videoStats[0]?.bitrate ? `${parseFloat(videoStats[0]?.bitrate).toFixed(2)} kb/s` : '-',
+    },
+    {
+      label: 'Frame rate',
+      audio: '-',
       video:
-        videoStats && videoStats[0]?.bitrate
-          ? `${parseFloat(videoStats[0]?.bitrate).toFixed(2)} kb/s`
-          : "-",
+        videoStats && (videoStats[0]?.size?.framerate === null || videoStats[0]?.size?.framerate === undefined)
+          ? '-'
+          : `${videoStats ? videoStats[0]?.size?.framerate : '-'}`,
     },
     {
-      label: "Frame rate",
-      audio: "-",
-      video:
-        videoStats &&
-        (videoStats[0]?.size?.framerate === null ||
-          videoStats[0]?.size?.framerate === undefined)
-          ? "-"
-          : `${videoStats ? videoStats[0]?.size?.framerate : "-"}`,
-    },
-    {
-      label: "Resolution",
-      audio: "-",
+      label: 'Resolution',
+      audio: '-',
       video: videoStats
         ? videoStats && videoStats[0]?.size?.width === null
-          ? "-"
+          ? '-'
           : `${videoStats[0]?.size?.width}x${videoStats[0]?.size?.height}`
-        : "-",
+        : '-',
     },
     {
-      label: "Codec",
-      audio: audioStats && audioStats[0]?.codec ? audioStats[0]?.codec : "-",
-      video: videoStats && videoStats[0]?.codec ? videoStats[0]?.codec : "-",
+      label: 'Codec',
+      audio: audioStats && audioStats[0]?.codec ? audioStats[0]?.codec : '-',
+      video: videoStats && videoStats[0]?.codec ? videoStats[0]?.codec : '-',
     },
     {
-      label: "Cur. Layers",
-      audio: "-",
+      label: 'Cur. Layers',
+      audio: '-',
       video:
         videoStats && !isLocal
           ? videoStats && videoStats[0]?.currentSpatialLayer === null
-            ? "-"
-            : `S:${videoStats[0]?.currentSpatialLayer || 0} T:${
-                videoStats[0]?.currentTemporalLayer || 0
-              }`
-          : "-",
+            ? '-'
+            : `S:${videoStats[0]?.currentSpatialLayer || 0} T:${videoStats[0]?.currentTemporalLayer || 0}`
+          : '-',
     },
     {
-      label: "Pref. Layers",
-      audio: "-",
+      label: 'Pref. Layers',
+      audio: '-',
       video:
         videoStats && !isLocal
           ? videoStats && videoStats[0]?.preferredSpatialLayer === null
-            ? "-"
-            : `S:${videoStats[0]?.preferredSpatialLayer || 0} T:${
-                videoStats[0]?.preferredTemporalLayer || 0
-              }`
-          : "-",
+            ? '-'
+            : `S:${videoStats[0]?.preferredSpatialLayer || 0} T:${videoStats[0]?.preferredTemporalLayer || 0}`
+          : '-',
     },
   ];
 
@@ -270,8 +216,7 @@ export const CornerDisplayName = ({
       }
 
       return () => {
-        if (statsIntervalIdRef.current)
-          clearInterval(statsIntervalIdRef.current);
+        if (statsIntervalIdRef.current) clearInterval(statsIntervalIdRef.current);
       };
     }
   }, [webcamStream, micStream, networkBarEnabled]);
@@ -279,11 +224,11 @@ export const CornerDisplayName = ({
   return (
     <>
       <div
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
         }}
         style={{
-          position: "absolute",
+          position: 'absolute',
           bottom: show ? (isMobile ? 4 : isTab ? 8 : 12) : -32,
           left: show ? (isMobile ? 4 : isTab ? 8 : 12) : -42,
           opacity: show ? 1 : 0,
@@ -292,49 +237,44 @@ export const CornerDisplayName = ({
           paddingLeft: isMobile ? 4 : isTab ? 6 : 8,
           paddingRight: isMobile ? 4 : isTab ? 6 : 8,
           transform: `scale(${show ? 1 : 0})`,
-          backgroundColor:
-            appTheme === appThemes.LIGHT
-              ? theme.palette.lightTheme.three
-              : "#00000066",
+          backgroundColor: appTheme === appThemes.LIGHT ? theme.palette.lightTheme.three : '#00000066',
           borderRadius: 6,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           transition: `all ${200 * (animationsEnabled ? 1 : 0.5)}ms`,
-          transitionTimingFunction: "linear",
+          transitionTimingFunction: 'linear',
         }}
       >
         <Typography
-          variant={isLGDesktop ? "subtitle1" : "subtitle2"}
+          variant={isLGDesktop ? 'subtitle1' : 'subtitle2'}
           style={{
-            justifyContent: "center",
-            display: "flex",
-            alignItems: "center",
+            justifyContent: 'center',
+            display: 'flex',
+            alignItems: 'center',
             // lineHeight: 1,
-            color:
-              appTheme === appThemes.LIGHT &&
-              theme.palette.lightTheme.contrastText,
+            color: appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText,
           }}
         >
           {isPresenting
             ? isLocal
-              ? `You are presenting`
+              ? `Estas presentando`
               : `${nameTructed(displayName, 15)} is presenting`
             : isLocal
-            ? "You"
+            ? 'Yo'
             : nameTructed(displayName, 26)}
         </Typography>
         {(!micOn || isActiveSpeaker) && !isPresenting && (
           <div
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
             }}
             style={{
               padding: isActiveSpeaker ? 0 : isMobile ? 2 : isTab ? 3 : 1,
-              backgroundColor: isActiveSpeaker ? "" : "#D32F2Fcc",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              backgroundColor: isActiveSpeaker ? '' : '#D32F2Fcc',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               borderRadius: 24,
               marginLeft: 6,
             }}
@@ -342,7 +282,7 @@ export const CornerDisplayName = ({
             {isActiveSpeaker ? (
               <Lottie
                 options={defaultOptions}
-                eventListeners={[{ eventName: "done" }]}
+                eventListeners={[{eventName: 'done'}]}
                 height={(analyzerSize * 2) / 3}
                 width={(analyzerSize * 2) / 2}
                 isClickToPauseDisabled
@@ -364,32 +304,32 @@ export const CornerDisplayName = ({
 
       {canPin && (
         <div
-          className="pinClass"
+          className='pinClass'
           style={{
-            position: "absolute",
+            position: 'absolute',
             right: showPin ? (isMobile ? 4 : isTab ? 8 : 12) : -42,
             bottom: showPin ? (isMobile ? 4 : isTab ? 8 : 12) : -32,
             transform: `scale(${showPin ? 1 : 0})`,
             transition: `all ${200 * (animationsEnabled ? 1 : 0.5)}ms`,
-            transitionTimingFunction: "linear",
+            transitionTimingFunction: 'linear',
           }}
         >
           <IconButton
-            size="small"
-            onClick={(e) => {
+            size='small'
+            onClick={e => {
               e.stopPropagation();
               isPinned ? unpin() : pin();
             }}
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               padding: isMobile ? 3 : isTab ? 4 : 5,
-              backgroundColor: isPinned ? "white" : "#0000004d",
+              backgroundColor: isPinned ? 'white' : '#0000004d',
             }}
           >
             <Pin
-              fill={isPinned ? "#000" : "#ffffffb3"}
+              fill={isPinned ? '#000' : '#ffffffb3'}
               style={{
                 height: analyzerSize * 0.6,
                 width: analyzerSize * 0.6,
@@ -401,32 +341,31 @@ export const CornerDisplayName = ({
       {(webcamStream || micStream || screenShareStream) && networkBarEnabled && (
         <Box>
           <div
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               handleClick(e);
             }}
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: show ? (isMobile ? 4 : isTab ? 8 : 12) : -32,
               right: show ? (isMobile ? 4 : isTab ? 8 : 12) : -42,
               transform: `scale(${show ? 1 : 0})`,
               transition: `all ${200 * (animationsEnabled ? 1 : 0.5)}ms`,
-              transitionTimingFunction: "linear",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              transitionTimingFunction: 'linear',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               padding: isMobile ? 3 : isTab ? 4 : 5,
-              backgroundColor:
-                score > 7 ? "#3BA55D" : score > 4 ? "#faa713" : "#FF5D5D",
+              backgroundColor: score > 7 ? '#3BA55D' : score > 4 ? '#faa713' : '#FF5D5D',
               borderRadius: 4,
-              cursor: "pointer",
+              cursor: 'pointer',
             }}
           >
             <NetworkIcon
-              color1={"#ffffff"}
-              color2={"#ffffff"}
-              color3={"#ffffff"}
-              color4={"#ffffff"}
+              color1={'#ffffff'}
+              color2={'#ffffff'}
+              color3={'#ffffff'}
+              color4={'#ffffff'}
               style={{
                 height: analyzerSize * 0.6,
                 width: analyzerSize * 0.6,
@@ -435,23 +374,23 @@ export const CornerDisplayName = ({
           </div>
           <div
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: show ? (isMobile ? 4 : isTab ? 8 : 12) : -32,
               right: show ? (isMobile ? 4 : isTab ? 8 : 12) : -42,
             }}
           >
             <Popover
               anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: 'top',
+                horizontal: 'right',
               }}
               transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: 'top',
+                horizontal: 'right',
               }}
               anchorEl={downArrow}
               open={Boolean(downArrow)}
-              onClose={(e) => {
+              onClose={e => {
                 e.stopPropagation();
                 handleClose();
               }}
@@ -460,51 +399,41 @@ export const CornerDisplayName = ({
                 <Box
                   style={{
                     padding: 9,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    backgroundColor:
-                      score > 7 ? "#3BA55D" : score > 4 ? "#faa713" : "#FF5D5D",
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    backgroundColor: score > 7 ? '#3BA55D' : score > 4 ? '#faa713' : '#FF5D5D',
                   }}
                 >
-                  <Typography
-                    variant="body2"
-                    style={{ fontWeight: 600 }}
-                  >{`Quality Score : ${
-                    score > 7 ? "Good" : score > 4 ? "Average" : "Poor"
+                  <Typography variant='body2' style={{fontWeight: 600}}>{`Quality Score : ${
+                    score > 7 ? 'Good' : score > 4 ? 'Average' : 'Poor'
                   }`}</Typography>
 
-                  <IconButton
-                    size="small"
-                    style={{ cursor: "pointer" }}
-                    onClick={handleClose}
-                  >
-                    <CloseOutlined style={{ height: 16, width: 16 }} />
+                  <IconButton size='small' style={{cursor: 'pointer'}} onClick={handleClose}>
+                    <CloseOutlined style={{height: 16, width: 16}} />
                   </IconButton>
                 </Box>
-                <Box style={{ display: "flex" }}>
-                  <Box style={{ display: "flex", flexDirection: "column" }}>
+                <Box style={{display: 'flex'}}>
+                  <Box style={{display: 'flex', flexDirection: 'column'}}>
                     {qualityStateArray.map((item, index) => {
                       return (
                         <Box
                           style={{
-                            display: "flex",
+                            display: 'flex',
                             borderBottom:
                               index === qualityStateArray.length - 1
-                                ? ""
+                                ? ''
                                 : `1px solid ${
-                                    appTheme === appThemes.LIGHT
-                                      ? theme.palette.lightTheme.outlineColor
-                                      : "#ffffff33"
+                                    appTheme === appThemes.LIGHT ? theme.palette.lightTheme.outlineColor : '#ffffff33'
                                   }`,
                           }}
                         >
                           <Box
                             style={{
-                              display: "flex",
+                              display: 'flex',
                               flex: 1,
                               width: 120,
-                              alignItems: "center",
+                              alignItems: 'center',
                             }}
                           >
                             {index !== 0 && (
@@ -522,14 +451,12 @@ export const CornerDisplayName = ({
                           </Box>
                           <Box
                             style={{
-                              display: "flex",
+                              display: 'flex',
                               flex: 1,
-                              alignItems: "center",
-                              justifyContent: "center",
+                              alignItems: 'center',
+                              justifyContent: 'center',
                               borderLeft: `1px solid ${
-                                appTheme === appThemes.LIGHT
-                                  ? theme.palette.lightTheme.outlineColor
-                                  : "#ffffff33"
+                                appTheme === appThemes.LIGHT ? theme.palette.lightTheme.outlineColor : '#ffffff33'
                               }`,
                             }}
                           >
@@ -539,7 +466,7 @@ export const CornerDisplayName = ({
                                 marginTop: 6,
                                 marginBottom: 6,
                                 width: 65,
-                                textAlign: "center",
+                                textAlign: 'center',
                               }}
                             >
                               {item.audio}
@@ -547,14 +474,12 @@ export const CornerDisplayName = ({
                           </Box>
                           <Box
                             style={{
-                              display: "flex",
+                              display: 'flex',
                               flex: 1,
-                              alignItems: "center",
-                              justifyContent: "center",
+                              alignItems: 'center',
+                              justifyContent: 'center',
                               borderLeft: `1px solid ${
-                                appTheme === appThemes.LIGHT
-                                  ? theme.palette.lightTheme.outlineColor
-                                  : "#ffffff33"
+                                appTheme === appThemes.LIGHT ? theme.palette.lightTheme.outlineColor : '#ffffff33'
                               }`,
                             }}
                           >
@@ -564,7 +489,7 @@ export const CornerDisplayName = ({
                                 marginTop: 6,
                                 marginBottom: 6,
                                 width: 65,
-                                textAlign: "center",
+                                textAlign: 'center',
                               }}
                             >
                               {item.video}
@@ -584,7 +509,7 @@ export const CornerDisplayName = ({
   );
 };
 
-const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
+const ParticipantViewer = ({participantId, quality, useVisibilitySensor}) => {
   const videoPlayer = useRef();
   const [videoDivWrapperRef, setVideoDivWrapperRef] = useState(null);
   const [mouseOver, setMouseOver] = useState(false);
@@ -604,11 +529,11 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
     appTheme,
   } = useMeetingAppContext();
 
-  const onStreamEnabled = (stream) => {
+  const onStreamEnabled = stream => {
     // console.log(participantId, stream.kind, " Stream started ");
   };
 
-  const onStreamDisabled = (stream) => {
+  const onStreamDisabled = stream => {
     // console.log(participantId, stream.kind, " Stream stopped ");
   };
 
@@ -637,17 +562,14 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
     }
   }, [webcamStream, webcamOn]);
 
-  const participantAccentColor = useMemo(
-    () => getRandomColor(appTheme === appThemes.LIGHT ? "dark" : "light"),
-    []
-  );
+  const participantAccentColor = useMemo(() => getRandomColor(appTheme === appThemes.LIGHT ? 'dark' : 'light'), []);
 
   const theme = useTheme();
 
   useEffect(() => {
     if (!quality || isRecorder) return;
 
-    setQuality("high");
+    setQuality('high');
   }, [quality, setQuality, isRecorder]);
 
   const dpSize = useResponsiveSize({
@@ -658,18 +580,14 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
     xs: 52,
   });
 
-  const flipStyle = useMemo(
-    () =>
-      isLocal ? { transform: "scaleX(-1)", WebkitTransform: "scaleX(-1)" } : {},
-    [isLocal]
-  );
+  const flipStyle = useMemo(() => (isLocal ? {transform: 'scaleX(-1)', WebkitTransform: 'scaleX(-1)'} : {}), [isLocal]);
 
   const defaultRippleOptions = {
     loop: true,
     autoplay: true,
     animationData: circleRipple,
     rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
+      preserveAspectRatio: 'xMidYMid slice',
     },
   };
 
@@ -681,7 +599,7 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
 
   useEffect(() => {
     if (isRecorder) {
-      setQuality("high");
+      setQuality('high');
     }
   }, [isRecorder]);
 
@@ -701,12 +619,12 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
   }, [isRecorder, isLocal, videoDivWrapperRef, webcamStream]);
 
   useEffect(() => {
-    eventEmitter.emit(appEvents["participant-visible"], {
+    eventEmitter.emit(appEvents['participant-visible'], {
       participantId,
     });
 
     return () => {
-      eventEmitter.emit(appEvents["participant-invisible"], {
+      eventEmitter.emit(appEvents['participant-invisible'], {
         participantId,
       });
     };
@@ -714,7 +632,7 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
 
   const checkAndUpdatePortrait = () => {
     if (webcamStream && maintainVideoAspectRatio) {
-      const { height, width } = webcamStream.track.getSettings();
+      const {height, width} = webcamStream.track.getSettings();
       if (height > width && !portrait) {
         setPortrait(true);
       } else if (height < width && portrait) {
@@ -729,13 +647,13 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
     <VisibilitySensor
       active
       // active={!!useVisibilitySensor}
-      onChange={(isVisible) => {
+      onChange={isVisible => {
         if (isVisible) {
-          eventEmitter.emit(appEvents["participant-visible"], {
+          eventEmitter.emit(appEvents['participant-visible'], {
             participantId,
           });
         } else {
-          eventEmitter.emit(appEvents["participant-invisible"], {
+          eventEmitter.emit(appEvents['participant-invisible'], {
             participantId,
           });
         }
@@ -761,30 +679,26 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
           setMouseOver(false);
         }}
         onDoubleClick={() => {
-          eventEmitter.emit(appEvents["toggle-full-screen"]);
+          eventEmitter.emit(appEvents['toggle-full-screen']);
         }}
         onClick={() => {
-          setOverlaidInfoVisible((s) => !s);
+          setOverlaidInfoVisible(s => !s);
         }}
         style={{
-          height: "100%",
-          width: "100%",
+          height: '100%',
+          width: '100%',
           backgroundColor:
             appTheme === appThemes.DARK
               ? theme.palette.darkTheme.slightLighter
               : appTheme === appThemes.LIGHT
               ? theme.palette.lightTheme.two
               : theme.palette.background.paper,
-          position: "relative",
-          overflow: "hidden",
+          position: 'relative',
+          overflow: 'hidden',
           borderRadius: theme.spacing(1),
         }}
         className={`${
-          maintainLandscapeVideoAspectRatio && !portrait
-            ? "video-contain"
-            : portrait
-            ? ""
-            : "video-cover"
+          maintainLandscapeVideoAspectRatio && !portrait ? 'video-contain' : portrait ? '' : 'video-cover'
         }`}
       >
         {webcamOn ? (
@@ -803,11 +717,11 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
               //
               url={mediaStream}
               //
-              height={"100%"}
-              width={"100%"}
+              height={'100%'}
+              width={'100%'}
               style={flipStyle}
-              onError={(err) => {
-                console.log(err, "participant video error");
+              onError={err => {
+                console.log(err, 'participant video error');
               }}
               onProgress={() => {
                 checkAndUpdatePortrait();
@@ -817,35 +731,31 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
         ) : (
           <div
             style={{
-              height: "100%",
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              height: '100%',
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             {isActiveSpeaker && (
               <div
                 style={{
-                  position: "absolute",
+                  position: 'absolute',
                   top: 0,
                   bottom: 0,
                   right: 0,
                   left: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <Lottie
                   options={defaultRippleOptions}
-                  eventListeners={[{ eventName: "done" }]}
-                  height={
-                    (dpSize / (presenterId || whiteboardStarted ? 2 : 1)) * 2
-                  }
-                  width={
-                    (dpSize / (presenterId || whiteboardStarted ? 2 : 1)) * 2
-                  }
+                  eventListeners={[{eventName: 'done'}]}
+                  height={(dpSize / (presenterId || whiteboardStarted ? 2 : 1)) * 2}
+                  width={(dpSize / (presenterId || whiteboardStarted ? 2 : 1)) * 2}
                   isClickToPauseDisabled
                 />
               </div>
@@ -856,20 +766,18 @@ const ParticipantViewer = ({ participantId, quality, useVisibilitySensor }) => {
                 zIndex: 10,
                 height: dpSize / (presenterId || whiteboardStarted ? 2 : 1),
                 width: dpSize / (presenterId || whiteboardStarted ? 2 : 1),
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 borderRadius: 100,
                 backgroundColor: participantAccentColor,
-                transition: animationsEnabled
-                  ? "height 800ms, width 800ms"
-                  : undefined,
-                transitionTimingFunction: "ease-in-out",
+                transition: animationsEnabled ? 'height 800ms, width 800ms' : undefined,
+                transitionTimingFunction: 'ease-in-out',
               }}
             >
               <Typography
-                variant={presenterId || whiteboardStarted ? "body2" : "h5"}
-                style={{ color: invertColor(participantAccentColor) }}
+                variant={presenterId || whiteboardStarted ? 'body2' : 'h5'}
+                style={{color: invertColor(participantAccentColor)}}
               >
                 {String(displayName).charAt(0).toUpperCase()}
               </Typography>

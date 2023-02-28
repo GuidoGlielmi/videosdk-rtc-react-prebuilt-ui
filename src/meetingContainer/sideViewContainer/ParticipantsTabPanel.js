@@ -1,9 +1,5 @@
-import {
-  useMeeting,
-  useParticipant,
-  usePubSub,
-} from "@videosdk.live/react-sdk";
-import { MoreVert, SearchOutlined } from "@material-ui/icons";
+import {useMeeting, useParticipant, usePubSub} from '@videosdk.live/react-sdk';
+import {MoreVert, SearchOutlined} from '@material-ui/icons';
 import {
   Avatar,
   Box,
@@ -18,65 +14,65 @@ import {
   MenuList,
   MenuItem,
   Popover,
-} from "@material-ui/core";
-import React, { useMemo, useState } from "react";
-import { appThemes, useMeetingAppContext } from "../../MeetingAppContextDef";
-import { RaiseHand } from "../../icons";
-import { List } from "react-virtualized";
-import useWindowSize from "../../utils/useWindowSize";
-import useIsTab from "../../utils/useIsTab";
-import useIsMobile from "../../utils/useIsMobile";
-import ConfirmBox from "../../components/ConfirmBox";
-import { nameTructed } from "../../utils/common";
-import ToggleModeContainer from "../../components/ToggleModeContainer";
-import { meetingModes } from "../../CONSTS";
-import ParticipantScreenShareIcon from "../../icons/ParticipantScreenShareIcon";
-import ParticipantMicOnIcon from "../../icons/ParticipantMicOnIcon";
-import ParticipantMicOffIcon from "../../icons/ParticipantMicOffIcon";
-import ParticipantVideoOnIcon from "../../icons/ParticipantVideoOnIcon";
-import ParticipantVideoOffIcon from "../../icons/ParticipantVideoOffIcon";
-import ParticipantPinIcon from "../../icons/ParticipantPinIcon";
-import ParticipantRemoveIcon from "../../icons/ParticipantRemoveIcon";
-import useIsHls from "../useIsHls";
+} from '@material-ui/core';
+import React, {useMemo, useState} from 'react';
+import {appThemes, useMeetingAppContext} from '../../MeetingAppContextDef';
+import {RaiseHand} from '../../icons';
+import {List} from 'react-virtualized';
+import useWindowSize from '../../utils/useWindowSize';
+import useIsTab from '../../utils/useIsTab';
+import useIsMobile from '../../utils/useIsMobile';
+import ConfirmBox from '../../components/ConfirmBox';
+import {nameTructed} from '../../utils/common';
+import ToggleModeContainer from '../../components/ToggleModeContainer';
+import {meetingModes} from '../../CONSTS';
+import ParticipantScreenShareIcon from '../../icons/ParticipantScreenShareIcon';
+import ParticipantMicOnIcon from '../../icons/ParticipantMicOnIcon';
+import ParticipantMicOffIcon from '../../icons/ParticipantMicOffIcon';
+import ParticipantVideoOnIcon from '../../icons/ParticipantVideoOnIcon';
+import ParticipantVideoOffIcon from '../../icons/ParticipantVideoOffIcon';
+import ParticipantPinIcon from '../../icons/ParticipantPinIcon';
+import ParticipantRemoveIcon from '../../icons/ParticipantRemoveIcon';
+import useIsHls from '../useIsHls';
 
 const useStyles = makeStyles(() => ({
   textField: {
-    "&:hover": {
-      border: "1px solid #70707033",
-      borderRadius: "6px",
+    '&:hover': {
+      border: '1px solid #70707033',
+      borderRadius: '6px',
     },
-    "& .MuiInputBase-input": {
-      color: "#404B53",
+    '& .MuiInputBase-input': {
+      color: '#404B53',
     },
-    border: "1px solid #70707033",
-    borderRadius: "6px",
+    border: '1px solid #70707033',
+    borderRadius: '6px',
   },
   input: {
-    "& .MuiOutlinedInput-input": {
-      padding: "16px 12px",
+    '& .MuiOutlinedInput-input': {
+      padding: '16px 12px',
     },
   },
-  popover: { backgroundColor: "transparent" },
+  popover: {backgroundColor: 'transparent'},
   popoverBorder: {
-    borderRadius: "12px",
-    backgroundColor: "#212032",
+    borderRadius: '12px',
+    backgroundColor: '#212032',
     marginTop: 8,
     width: 300,
   },
   popoverHover: {
-    "&:hover": {
-      backgroundColor: "#CCD2D899",
+    '&:hover': {
+      backgroundColor: '#CCD2D899',
     },
   },
   popoverHoverDark: {
-    "&:hover": {
-      backgroundColor: "#2B303499",
+    '&:hover': {
+      backgroundColor: '#2B303499',
     },
   },
 }));
 
-function ParticipantListItem({ raisedHand, participantId }) {
-  const { presenterId } = useMeeting();
+function ParticipantListItem({raisedHand, participantId}) {
+  const {presenterId} = useMeeting();
   const {
     participant,
     micOn,
@@ -108,15 +104,14 @@ function ParticipantListItem({ raisedHand, participantId }) {
     return presenterId === participantId;
   }, [presenterId, participantId]);
 
-  const { publish } = usePubSub(`SCR_SHR_REQ_${participantId}`);
+  const {publish} = usePubSub(`SCR_SHR_REQ_${participantId}`);
 
-  const [isParticipantKickoutVisible, setIsParticipantKickoutVisible] =
-    useState(false);
+  const [isParticipantKickoutVisible, setIsParticipantKickoutVisible] = useState(false);
 
   const [participantMode, setParticipantMode] = useState(null);
   const [moreIconClicked, setMoreIconClicked] = useState(null);
 
-  const handleClick = (event) => {
+  const handleClick = event => {
     setMoreIconClicked(event.currentTarget);
   };
 
@@ -131,10 +126,10 @@ function ParticipantListItem({ raisedHand, participantId }) {
   const theme = useTheme();
 
   usePubSub(`CURRENT_MODE_${participantId}`, {
-    onMessageReceived: (data) => {
+    onMessageReceived: data => {
       setParticipantMode(data.message);
     },
-    onOldMessagesReceived: (messages) => {
+    onOldMessagesReceived: messages => {
       const latestMessage = messages.sort((a, b) => {
         if (a.timestamp > b.timestamp) {
           return -1;
@@ -167,52 +162,50 @@ function ParticipantListItem({ raisedHand, participantId }) {
     >
       <Box
         style={{
-          display: "flex",
+          display: 'flex',
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          position: "relative",
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
         }}
       >
         <Avatar
-          variant={"rounded"}
+          variant={'rounded'}
           style={{
-            color: appTheme === appThemes.LIGHT && "white",
+            color: appTheme === appThemes.LIGHT && 'white',
             backgroundColor:
               appTheme === appThemes.DARK
                 ? theme.palette.darkTheme.five
                 : appTheme === appThemes.LIGHT
                 ? theme.palette.lightTheme.five
-                : "",
+                : '',
           }}
         >
           {displayName?.charAt(0)}
         </Avatar>
 
-        <Box ml={1} mr={0.5} style={{ flex: 1, display: "flex" }}>
+        <Box ml={1} mr={0.5} style={{flex: 1, display: 'flex'}}>
           <Typography
             style={{
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              whiteSpace: "pre-wrap",
-              color:
-                appTheme === appThemes.LIGHT &&
-                theme.palette.lightTheme.contrastText,
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'pre-wrap',
+              color: appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText,
             }}
-            variant="body1"
+            variant='body1'
             noWrap
           >
-            {isLocal ? "You" : nameTructed(displayName, 10)}
+            {isLocal ? 'Yo' : nameTructed(displayName, 10)}
           </Typography>
         </Box>
 
         <Box
           style={{
-            display: "flex",
+            display: 'flex',
             flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'absolute',
             top: 0,
             right: 0,
             bottom: 0,
@@ -220,27 +213,27 @@ function ParticipantListItem({ raisedHand, participantId }) {
         >
           <Box
             style={{
-              display: "flex",
+              display: 'flex',
               flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
               // position: "relative",
             }}
           >
             <Box
               style={{
-                display: "flex",
+                display: 'flex',
                 flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
               {raisedHand && (
                 <Box
                   style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                   mr={0}
                   p={0}
@@ -248,9 +241,7 @@ function ParticipantListItem({ raisedHand, participantId }) {
                 >
                   <RaiseHand
                     fillColor={
-                      appTheme === appThemes.LIGHT
-                        ? theme.palette.lightTheme.contrastText
-                        : theme.palette.common.white
+                      appTheme === appThemes.LIGHT ? theme.palette.lightTheme.contrastText : theme.palette.common.white
                     }
                   />
                 </Box>
@@ -265,7 +256,7 @@ function ParticipantListItem({ raisedHand, participantId }) {
                       meetingMode === meetingModes.VIEWER ||
                       participantMode === meetingModes.VIEWER
                     }
-                    style={{ padding: 0 }}
+                    style={{padding: 0}}
                     onClick={() => {
                       if (micOn) {
                         disableMic();
@@ -276,20 +267,16 @@ function ParticipantListItem({ raisedHand, participantId }) {
                   >
                     <Box
                       style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         borderRadius: 100,
                       }}
                       p={0.5}
                     >
                       {micOn ? (
                         <ParticipantMicOnIcon
-                          fillColor={
-                            appTheme === appThemes.LIGHT
-                              ? theme.palette.lightTheme.contrastText
-                              : "white"
-                          }
+                          fillColor={appTheme === appThemes.LIGHT ? theme.palette.lightTheme.contrastText : 'white'}
                         />
                       ) : (
                         <ParticipantMicOffIcon />
@@ -307,7 +294,7 @@ function ParticipantListItem({ raisedHand, participantId }) {
                       meetingMode === meetingModes.VIEWER ||
                       participantMode === meetingModes.VIEWER
                     }
-                    style={{ padding: 0 }}
+                    style={{padding: 0}}
                     onClick={() => {
                       if (webcamOn) {
                         disableWebcam();
@@ -318,20 +305,16 @@ function ParticipantListItem({ raisedHand, participantId }) {
                   >
                     <Box
                       style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         borderRadius: 100,
                       }}
                       p={0.5}
                     >
                       {webcamOn ? (
                         <ParticipantVideoOnIcon
-                          fillColor={
-                            appTheme === appThemes.LIGHT
-                              ? theme.palette.lightTheme.contrastText
-                              : "white"
-                          }
+                          fillColor={appTheme === appThemes.LIGHT ? theme.palette.lightTheme.contrastText : 'white'}
                         />
                       ) : (
                         <ParticipantVideoOffIcon />
@@ -343,32 +326,29 @@ function ParticipantListItem({ raisedHand, participantId }) {
               {canPin && (
                 <Box
                   style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                   ml={1}
                   mr={0}
                   p={0.5}
                 >
-                  <Tooltip
-                    title={pinState?.share || pinState?.cam ? "Unpin" : `Pin`}
-                  >
+                  <Tooltip title={pinState?.share || pinState?.cam ? 'Unpin' : `Pin`}>
                     <IconButton
                       disabled={
                         // !expanded ||
-                        meetingMode === meetingModes.VIEWER ||
-                        participantMode === meetingModes.VIEWER
+                        meetingMode === meetingModes.VIEWER || participantMode === meetingModes.VIEWER
                       }
-                      size="small"
-                      onClick={(e) => {
+                      size='small'
+                      onClick={e => {
                         e.stopPropagation();
                         pinState?.share || pinState?.cam ? unpin() : pin();
                       }}
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
                       <ParticipantPinIcon
@@ -376,10 +356,10 @@ function ParticipantListItem({ raisedHand, participantId }) {
                           pinState?.share || pinState?.cam
                             ? appTheme === appThemes.LIGHT
                               ? theme.palette.lightTheme.contrastText
-                              : "white"
+                              : 'white'
                             : appTheme === appThemes.LIGHT
                             ? theme.palette.lightTheme.four
-                            : "#ffffff80"
+                            : '#ffffff80'
                         }
                       />
                     </IconButton>
@@ -396,29 +376,27 @@ function ParticipantListItem({ raisedHand, participantId }) {
               }}
             >
               <IconButton
-                style={{ padding: 0 }}
+                style={{padding: 0}}
                 disabled={meetingMode === meetingModes.VIEWER}
-                onClick={(e) => {
+                onClick={e => {
                   handleClick(e);
                 }}
               >
                 <Box
                   style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     borderRadius: 100,
                   }}
                   p={0.5}
                 >
                   <MoreVert
-                    fontSize="small"
+                    fontSize='small'
                     style={{
                       height: 18,
                       width: 18,
-                      color:
-                        appTheme === appThemes.LIGHT &&
-                        theme.palette.lightTheme.contrastText,
+                      color: appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText,
                     }}
                   />
                 </Box>
@@ -428,10 +406,10 @@ function ParticipantListItem({ raisedHand, participantId }) {
                 anchorEl={moreIconClicked}
                 onClose={handleClose}
                 anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
+                  vertical: 'bottom',
+                  horizontal: 'left',
                 }}
-                style={{ marginTop: 4, marginRight: 16 }}
+                style={{marginTop: 4, marginRight: 16}}
               >
                 <MenuList
                   style={{
@@ -440,20 +418,20 @@ function ParticipantListItem({ raisedHand, participantId }) {
                         ? theme.palette.darkTheme.slightLighter
                         : appTheme === appThemes.LIGHT
                         ? theme.palette.lightTheme.two
-                        : "",
+                        : '',
                     color:
                       appTheme === appThemes.DARK
                         ? theme.palette.common.white
                         : appTheme === appThemes.LIGHT
                         ? theme.palette.lightTheme.contrastText
-                        : "",
+                        : '',
                   }}
                 >
                   {!isLocal && canRemoveOtherParticipant && (
                     <>
                       <MenuItem
                         key={`remove`}
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           setIsParticipantKickoutVisible(true);
                           handleClose();
@@ -464,15 +442,15 @@ function ParticipantListItem({ raisedHand, participantId }) {
                               ? classes.popoverHover
                               : appTheme === appThemes.DARK
                               ? classes.popoverHoverDark
-                              : "",
+                              : '',
                         }}
                       >
-                        <Box style={{ display: "flex", flexDirection: "row" }}>
+                        <Box style={{display: 'flex', flexDirection: 'row'}}>
                           <Box
                             style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
                             }}
                           >
                             <ParticipantRemoveIcon
@@ -485,19 +463,17 @@ function ParticipantListItem({ raisedHand, participantId }) {
                           </Box>
                           <Box
                             style={{
-                              display: "flex",
+                              display: 'flex',
                               flex: 1,
-                              flexDirection: "column",
+                              flexDirection: 'column',
                               marginLeft: 12,
-                              justifyContent: "center",
+                              justifyContent: 'center',
                             }}
                           >
                             <Typography
                               style={{
                                 fontSize: 14,
-                                color:
-                                  appTheme === appThemes.LIGHT &&
-                                  theme.palette.lightTheme.contrastText,
+                                color: appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText,
                               }}
                             >
                               Remove Participant
@@ -517,7 +493,7 @@ function ParticipantListItem({ raisedHand, participantId }) {
                   {meetingMode === meetingModes.CONFERENCE && (
                     <MenuItem
                       key={`screen-share`}
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         publish({
                           setScreenShareOn: !isParticipantPresenting,
@@ -530,7 +506,7 @@ function ParticipantListItem({ raisedHand, participantId }) {
                             ? classes.popoverHover
                             : appTheme === appThemes.DARK
                             ? classes.popoverHoverDark
-                            : "",
+                            : '',
                       }}
                       disabled={
                         !(
@@ -542,12 +518,12 @@ function ParticipantListItem({ raisedHand, participantId }) {
                         participantMode === meetingModes.VIEWER
                       }
                     >
-                      <Box style={{ display: "flex", flexDirection: "row" }}>
+                      <Box style={{display: 'flex', flexDirection: 'row'}}>
                         <Box
                           style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           {isParticipantPresenting ? (
@@ -566,29 +542,27 @@ function ParticipantListItem({ raisedHand, participantId }) {
                                   : !(
                                       !isLocal &&
                                       partcipantCanToogleOtherScreenShare &&
-                                      (presenterId
-                                        ? isParticipantPresenting
-                                        : true)
+                                      (presenterId ? isParticipantPresenting : true)
                                     ) ||
                                     meetingMode === meetingModes.VIEWER ||
                                     participantMode === meetingModes.VIEWER
                                   ? appTheme === appThemes.LIGHT
                                     ? theme.palette.lightTheme.contrastText
-                                    : "#ffffff80"
+                                    : '#ffffff80'
                                   : appTheme === appThemes.LIGHT
                                   ? theme.palette.lightTheme.contrastText
-                                  : "#ffffff"
+                                  : '#ffffff'
                               }
                             />
                           )}
                         </Box>
                         <Box
                           style={{
-                            display: "flex",
+                            display: 'flex',
                             flex: 1,
-                            flexDirection: "column",
+                            flexDirection: 'column',
                             marginLeft: 12,
-                            justifyContent: "center",
+                            justifyContent: 'center',
                           }}
                         >
                           <Typography
@@ -608,9 +582,7 @@ function ParticipantListItem({ raisedHand, participantId }) {
                                   : theme.palette.common.white,
                             }}
                           >
-                            {isParticipantPresenting
-                              ? "Stop Screenshare"
-                              : "Request Screenshare"}
+                            {isParticipantPresenting ? 'Dejar de compartir pantalla' : 'Solicitar compartir pantalla'}
                           </Typography>
                         </Box>
                       </Box>
@@ -625,12 +597,9 @@ function ParticipantListItem({ raisedHand, participantId }) {
       <ConfirmBox
         open={isParticipantKickoutVisible}
         title={`Remove ${nameTructed(displayName, 15)} `}
-        subTitle={`Are you sure want to remove ${nameTructed(
-          displayName,
-          15
-        )} from the call?`}
-        successText={"Remove"}
-        rejectText={"Cancel"}
+        subTitle={`Are you sure want to remove ${nameTructed(displayName, 15)} from the call?`}
+        successText={'Remove'}
+        rejectText={'Cancel'}
         onSuccess={() => {
           participant.remove();
           setIsParticipantKickoutVisible(false);
@@ -643,20 +612,17 @@ function ParticipantListItem({ raisedHand, participantId }) {
   );
 }
 
-export default function ParticipantsTabPanel({ panelWidth, panelHeight }) {
-  const [filterQuery, setFilterQuery] = useState("");
+export default function ParticipantsTabPanel({panelWidth, panelHeight}) {
+  const [filterQuery, setFilterQuery] = useState('');
 
-  const { participants } = useMeeting();
-  const { raisedHandsParticipants, appTheme } = useMeetingAppContext();
+  const {participants} = useMeeting();
+  const {raisedHandsParticipants, appTheme} = useMeetingAppContext();
 
   const sortedRaisedHandsParticipants = useMemo(() => {
     const participantIds = [...participants.keys()];
 
     const notRaised = participantIds.filter(
-      (pID) =>
-        raisedHandsParticipants.findIndex(
-          ({ participantId: rPID }) => rPID === pID
-        ) === -1
+      pID => raisedHandsParticipants.findIndex(({participantId: rPID}) => rPID === pID) === -1,
     );
 
     const raisedSorted = raisedHandsParticipants.sort((a, b) => {
@@ -670,11 +636,11 @@ export default function ParticipantsTabPanel({ panelWidth, panelHeight }) {
     });
 
     const combined = [
-      ...raisedSorted.map(({ participantId: p }) => ({
+      ...raisedSorted.map(({participantId: p}) => ({
         raisedHand: true,
         participantId: p,
       })),
-      ...notRaised.map((p) => ({ raisedHand: false, participantId: p })),
+      ...notRaised.map(p => ({raisedHand: false, participantId: p})),
     ];
 
     return combined;
@@ -682,44 +648,30 @@ export default function ParticipantsTabPanel({ panelWidth, panelHeight }) {
 
   const theme = useTheme();
 
-  const filterParticipants = (
-    sortedRaisedHandsParticipants,
-    participants,
-    filterQuery
-  ) =>
+  const filterParticipants = (sortedRaisedHandsParticipants, participants, filterQuery) =>
     filterQuery?.length > 3
-      ? sortedRaisedHandsParticipants.filter(({ participantId }) => {
-          const { displayName } = participants.get(participantId);
+      ? sortedRaisedHandsParticipants.filter(({participantId}) => {
+          const {displayName} = participants.get(participantId);
 
-          const hide = !displayName
-            ?.toLowerCase()
-            .includes(filterQuery.toLowerCase());
+          const hide = !displayName?.toLowerCase().includes(filterQuery.toLowerCase());
 
           return !hide;
         })
       : sortedRaisedHandsParticipants;
 
   const part = useMemo(
-    () =>
-      filterParticipants(
-        sortedRaisedHandsParticipants,
-        participants,
-        filterQuery
-      ),
+    () => filterParticipants(sortedRaisedHandsParticipants, participants, filterQuery),
 
-    [sortedRaisedHandsParticipants, participants, filterQuery]
+    [sortedRaisedHandsParticipants, participants, filterQuery],
   );
 
-  function rowRenderer({ key, index, isScrolling, isVisible, style }) {
-    const { participantId, raisedHand } = part[index];
+  function rowRenderer({key, index, isScrolling, isVisible, style}) {
+    const {participantId, raisedHand} = part[index];
 
     return (
-      <div {...{ key, style }}>
+      <div {...{key, style}}>
         {isVisible ? (
-          <ParticipantListItem
-            participantId={participantId}
-            raisedHand={raisedHand}
-          />
+          <ParticipantListItem participantId={participantId} raisedHand={raisedHand} />
         ) : (
           <Box
             mt={1}
@@ -738,7 +690,7 @@ export default function ParticipantsTabPanel({ panelWidth, panelHeight }) {
       </div>
     );
   }
-  const { width } = useWindowSize();
+  const {width} = useWindowSize();
   const isTab = useIsTab();
   const isMobile = useIsMobile();
   const classes = useStyles();
@@ -748,34 +700,30 @@ export default function ParticipantsTabPanel({ panelWidth, panelHeight }) {
       p={1}
       style={{
         height: panelHeight - 32,
-        overflowY: "auto",
-        overflowX: "hidden",
+        overflowY: 'auto',
+        overflowX: 'hidden',
       }}
     >
       <Box>
         <TextField
-          variant="outlined"
+          variant='outlined'
           fullWidth
-          placeholder="Search Participants"
+          placeholder='Buscar Participantes'
           classes={{
             root: appTheme === appThemes.LIGHT && classes.textField,
           }}
           style={{
-            color:
-              appTheme === appThemes.LIGHT &&
-              theme.palette.lightTheme.contrastText,
-            borderRadius: "6px",
+            color: appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText,
+            borderRadius: '6px',
           }}
-          onChange={(e) => setFilterQuery(e.target.value)}
+          onChange={e => setFilterQuery(e.target.value)}
           InputProps={{
-            classes: { root: classes.input },
+            classes: {root: classes.input},
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 <SearchOutlined
                   style={{
-                    color:
-                      appTheme === appThemes.LIGHT &&
-                      theme.palette.lightTheme.contrastText,
+                    color: appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText,
                   }}
                 />
               </InputAdornment>
@@ -784,7 +732,7 @@ export default function ParticipantsTabPanel({ panelWidth, panelHeight }) {
         />
       </Box>
 
-      <Box style={{ overflowY: "auto" }}>
+      <Box style={{overflowY: 'auto'}}>
         <List
           width={isTab || isMobile ? width - 32 : panelWidth - 36}
           height={panelHeight - 90}
