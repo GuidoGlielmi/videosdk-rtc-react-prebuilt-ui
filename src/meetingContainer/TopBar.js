@@ -214,9 +214,9 @@ const ParticipantsBTN = ({onClick, isMobile, isTab}) => {
 
   return isMobile || isTab ? (
     <MobileIconButton
-      tooltipTitle={'Participants'}
+      tooltipTitle={'Participantes'}
       isFocused={sideBarMode === sideBarModes.PARTICIPANTS}
-      buttonText={'Participants'}
+      buttonText={'Participantes'}
       disabledOpacity={1}
       Icon={Participants}
       disabled={meetingMode === meetingModes.VIEWER || !canToggleParticipantTab}
@@ -228,7 +228,7 @@ const ParticipantsBTN = ({onClick, isMobile, isTab}) => {
     />
   ) : (
     <OutlineIconButton
-      tooltipTitle={'Participants'}
+      tooltipTitle={'Participantes'}
       isFocused={sideBarMode === sideBarModes.PARTICIPANTS}
       Icon={Participants}
       disabledOpacity={1}
@@ -384,8 +384,8 @@ const ScreenShareBTN = ({onClick, isMobile, isTab}) => {
 
   return isMobile || isTab ? (
     <MobileIconButton
-      tooltipTitle={presenterId ? (localScreenShareOn ? 'Stop Presenting' : null) : 'Presentar Pantalla'}
-      buttonText={presenterId ? (localScreenShareOn ? 'Stop Presenting' : null) : 'Presentar Pantalla'}
+      tooltipTitle={presenterId ? (localScreenShareOn ? 'Dejar de presentar' : null) : 'Presentar Pantalla'}
+      buttonText={presenterId ? (localScreenShareOn ? 'Dejar de presentar' : null) : 'Presentar Pantalla'}
       isFocused={localScreenShareOn}
       Icon={ScreenShare}
       onClick={() => {
@@ -406,7 +406,7 @@ const ScreenShareBTN = ({onClick, isMobile, isTab}) => {
     />
   ) : (
     <OutlineIconButton
-      tooltipTitle={presenterId ? (localScreenShareOn ? 'Stop Presenting' : null) : 'Presentar Pantalla'}
+      tooltipTitle={presenterId ? (localScreenShareOn ? 'Dejar de presentar' : null) : 'Presentar Pantalla'}
       isFocused={localScreenShareOn}
       focusBGColor={appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText}
       Icon={ScreenShare}
@@ -1778,7 +1778,7 @@ const EndCallBTN = () => {
 
           <ConfirmBox
             open={isEndMeeting}
-            title={'Are you sure to end this call for everyone?'}
+            title={'Seguro que deseas finalizar la llamada para todos?'}
             successText={'Finalizar Llamada'}
             onSuccess={() => {
               sendChatMessage(JSON.stringify({buttonType: 'END_CALL', data: {}}));
@@ -1787,7 +1787,7 @@ const EndCallBTN = () => {
                 end();
               }, 1000);
             }}
-            rejectText='Cancel'
+            rejectText='Cancelar'
             onReject={() => {
               setIsEndMeeting(false);
             }}
@@ -1897,13 +1897,13 @@ const TopBar = ({topBarHeight}) => {
       });
     }
 
-    // if (pollEnabled || whiteboardEnabled) {
-    arrSideBar.unshift(topBarButtonTypes.ACTIVITIES);
-    mobileIconArr.unshift({
-      buttonType: topBarButtonTypes.ACTIVITIES,
-      // priority: 10,
-    });
-    // }
+    if (pollEnabled || whiteboardEnabled) {
+      arrSideBar.unshift(topBarButtonTypes.ACTIVITIES);
+      mobileIconArr.unshift({
+        buttonType: topBarButtonTypes.ACTIVITIES,
+        priority: 10,
+      });
+    }
 
     arr.unshift(arrSideBar);
 
