@@ -3,6 +3,9 @@
   "version": "0.3.23",
   "private": true,
   "homepage": "https://embed.videosdk.live/rtc-js-prebuilt/0.3.23/",
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
