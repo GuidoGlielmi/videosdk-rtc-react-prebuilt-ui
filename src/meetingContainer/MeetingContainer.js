@@ -61,31 +61,31 @@ const getPinMsg = ({
 }) => {
   const pinEnabled = state.cam || state.share;
   const pinnedSelf = participantId === pinnedBy;
-  const pinStateText = pinEnabled ? "pinned" : "unpinned";
+  const pinStateText = pinEnabled ? "anclado" : "desanclado";
   const localParticipantWasPinned = localParticipant === participantId;
   const localParticipantPinned = localParticipant === pinnedBy;
 
   if (pinnedSelf && localParticipantWasPinned && localParticipantPinned) {
-    return `You ${pinStateText} yourself`;
+    return `Te has ${pinStateText} a ti mismo/a`;
   } else if (pinnedSelf && !localParticipantWasPinned) {
-    return `${nameTructed(partcipantDisplayName, 15)}  was ${pinStateText}`;
+    return `${nameTructed(partcipantDisplayName, 25)} está ${pinStateText}/a`;
   } else if (!localParticipantWasPinned && !localParticipantPinned) {
     return `${nameTructed(
       partcipantDisplayName,
-      15
-    )} was ${pinStateText} by ${nameTructed(pinnedByDisplayName, 15)}`;
+      25
+    )} ha sido ${pinStateText}/a por ${nameTructed(pinnedByDisplayName, 25)}`;
   } else if (localParticipantWasPinned && !localParticipantPinned) {
-    return `You were ${pinStateText} by ${nameTructed(
+    return `Has sido ${pinStateText}/a por ${nameTructed(
       pinnedByDisplayName,
-      15
+      25
     )}`;
   } else if (!localParticipantWasPinned && localParticipantPinned) {
-    return ` You ${pinStateText} ${nameTructed(partcipantDisplayName, 15)}`;
+    return `Has ${pinStateText} a ${nameTructed(partcipantDisplayName, 25)}`;
   } else if (!pinnedBy) {
     if (localParticipantWasPinned) {
-      return `You were ${pinStateText}`;
+      return `Has sido ${pinStateText}/a`;
     } else {
-      return `${nameTructed(partcipantDisplayName, 15)} was ${pinStateText}`;
+      return `${nameTructed(partcipantDisplayName, 25)} ha sido ${pinStateText}/a`;
     }
   }
 };
@@ -549,8 +549,8 @@ const MeetingContainer = () => {
       ) {
         enqueueSnackbar(
           `${
-            isLocal ? "You" : nameTructed(mPresenter.displayName, 15)
-          } started presenting`
+            isLocal ? "Has" : `${nameTructed(mPresenter.displayName, 15)} ha`
+          } empezado a presentar`
         );
       }
     }
