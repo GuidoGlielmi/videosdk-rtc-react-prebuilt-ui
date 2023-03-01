@@ -1259,7 +1259,7 @@ const MicMenu = ({
                         : classes.singleMenuItemGutters,
                     }}
                   >
-                    AI Noise Removal
+                    Supresor de ruido IA
                   </MenuItem>
                 </Box>
               </MenuList>
