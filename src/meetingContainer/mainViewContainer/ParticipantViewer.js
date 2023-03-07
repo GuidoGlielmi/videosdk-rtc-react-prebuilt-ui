@@ -1,6 +1,6 @@
 import {Box, makeStyles, Popover, Typography, useTheme} from '@material-ui/core';
 import {useMeeting, useParticipant} from '@videosdk.live/react-sdk';
-import React, {useEffect, useRef, useMemo, useState} from 'react';
+import React, {useEffect, useRef, useMemo, useState, useContext} from 'react';
 import {MicOff} from '../../icons';
 import {IconButton} from '@material-ui/core';
 import {appThemes, useMeetingAppContext} from '../../MeetingAppContextDef';
@@ -17,6 +17,7 @@ import useIsLGDesktop from '../../utils/useIsLGDesktop';
 import ReactPlayer from 'react-player';
 import NetworkIcon from '../../icons/NetworkIcon';
 import {CloseOutlined} from '@material-ui/icons';
+import {pinContext} from '../../contexts/PinContext';
 
 const useStyles = makeStyles({
   popoverHover: {
@@ -45,10 +46,12 @@ export const CornerDisplayName = ({
   mouseOver,
 }) => {
   const theme = useTheme();
+  const {presenterId} = useMeeting();
 
   const isMobile = useIsMobile();
   const isTab = useIsTab();
   const isLGDesktop = useIsLGDesktop();
+  const {pinnedParticipant, setPinnedParticipant} = useContext(pinContext);
 
   const [downArrow, setDownArrow] = useState(null);
   const handleClick = event => {
@@ -259,7 +262,7 @@ export const CornerDisplayName = ({
           {isPresenting
             ? isLocal
               ? `Estas presentando`
-              : `${nameTructed(displayName, 15)} is presenting`
+              : `${nameTructed(displayName, 15)} está presentando`
             : isLocal
             ? 'Yo'
             : nameTructed(displayName, 26)}
@@ -302,7 +305,7 @@ export const CornerDisplayName = ({
         )}
       </div>
 
-      {canPin && (
+      {canPin && !presenterId && (
         <div
           className='pinClass'
           style={{
@@ -318,18 +321,25 @@ export const CornerDisplayName = ({
             size='small'
             onClick={e => {
               e.stopPropagation();
-              isPinned ? unpin() : pin();
+              if (isPinned) {
+                setPinnedParticipant(null);
+                unpin();
+              } else {
+                setPinnedParticipant(participantId);
+                pin();
+              }
             }}
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               padding: isMobile ? 3 : isTab ? 4 : 5,
-              backgroundColor: isPinned ? 'white' : '#0000004d',
+              // backgroundColor: isPinned ? 'white' : '#0000004d',
+              backgroundColor: participantId === pinnedParticipant ? 'white' : '#0000004d',
             }}
           >
             <Pin
-              fill={isPinned ? '#000' : '#ffffffb3'}
+              fill={participantId === pinnedParticipant ? '#000' : '#ffffffb3'}
               style={{
                 height: analyzerSize * 0.6,
                 width: analyzerSize * 0.6,

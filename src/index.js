@@ -5,11 +5,17 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import generateMuiTheme from "./mui/theme";
 import { ThemeProvider } from "@material-ui/styles";
+import PinContext from './contexts/PinContext';
+import TranscriptionsContext from './contexts/TranscriptionsContext';
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={generateMuiTheme()}>
-      <App />
+      <TranscriptionsContext>
+        <PinContext>
+          <App />
+        </PinContext>
+      </TranscriptionsContext>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")

@@ -1583,8 +1583,8 @@ const EndCallBTN = () => {
           !participantCanLeave && meetingMode === meetingModes.CONFERENCE
             ? 'Finalizar Llamada'
             : participantCanEndMeeting && meetingMode === meetingModes.CONFERENCE
-            ? 'Open popup'
-            : 'Leave Call'
+            ? 'Abrir opciones'
+            : 'Salir de la reunión'
         }
         bgColor={theme.palette.error.main}
         color={theme.palette.common.white}
@@ -1686,7 +1686,7 @@ const EndCallBTN = () => {
                         color: appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText,
                       }}
                     >
-                      Leave
+                      Salir
                     </Typography>
                     <Typography
                       color={'textSecondary'}
@@ -1700,7 +1700,7 @@ const EndCallBTN = () => {
                             : '',
                       }}
                     >
-                      Only you will leave the call.
+                      Sólo vos saldrás de la llamada.
                     </Typography>
                   </Box>
                 </Box>
@@ -1754,7 +1754,7 @@ const EndCallBTN = () => {
                         color: appTheme === appThemes.LIGHT && theme.palette.lightTheme.contrastText,
                       }}
                     >
-                      End
+                      Finalizar
                     </Typography>
                     <Typography
                       style={{
@@ -1768,7 +1768,7 @@ const EndCallBTN = () => {
                       }}
                       color={'textSecondary'}
                     >
-                      End call for all participants.
+                      Finalizar llamada para todos/as.
                     </Typography>
                   </Box>
                 </Box>

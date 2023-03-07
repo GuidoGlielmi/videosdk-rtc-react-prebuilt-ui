@@ -1,5 +1,5 @@
 import { useMeeting } from "@videosdk.live/react-sdk";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import ParticipantViewer from "./ParticipantViewer";
 import PresenterView from "./PresenterView";
 import {
@@ -24,6 +24,8 @@ import { useMediaQuery } from "react-responsive";
 import WhiteboardContainer, {
   convertHWAspectRatio,
 } from "../../components/whiteboard/WhiteboardContainer";
+import { pinContext } from '../../contexts/PinContext';
+import { transcriptionsContext } from '../../contexts/TranscriptionsContext';
 
 const MemoizedParticipant = React.memo(
   ParticipantViewer,
@@ -168,16 +170,13 @@ export const MemoizedMotionParticipant = React.memo(
     prevProps.relativeWidth === nextProps.relativeWidth &&
     prevProps.relativeTop === nextProps.relativeTop &&
     prevProps.relativeLeft === nextProps.relativeLeft &&
-    prevProps.useVisibilitySensor === nextProps.useVisibilitySensor
+    prevProps.useVisibilitySensor === nextProps.useVisibilitySensor,
 );
 
-const MainViewContainer = ({
-  height,
-  width,
-  whiteboardToolbarWidth,
-  whiteboardSpacing,
-}) => {
+const MainViewContainer = ({height, width, whiteboardToolbarWidth, whiteboardSpacing}) => {
+  const {currentTranscription} = useContext(transcriptionsContext)
   const mMeeting = useMeeting();
+  const {pinnedParticipant} = useContext(pinContext);
 
   const participants = mMeeting?.participants;
   const presenterId = mMeeting?.presenterId;
@@ -403,8 +402,7 @@ const MainViewContainer = ({
       isLandscape: !isPortrait,
       isPresenting: !!mainScreenViewActive,
     });
-
-    const { singleRow } = getGridForMainParticipants({
+    /*     const { singleRow } = getGridForMainParticipants({
       participants: localAndPinnedOnTop({
         localParticipantId: hideLocalParticipant ? null : localParticipantId,
         participants: mainParticipants,
@@ -419,9 +417,14 @@ const MainViewContainer = ({
             : true,
       }),
       gridInfo,
+    }); */
+    // return {singleRow, mainLayoutParticipantId};
+    const mainParticipant = pinnedParticipant || localParticipantId
+    const {singleRow} = getGridForMainParticipants({
+      participants: [...participants.keys()].filter(id => id !== mainParticipant),
+      gridInfo,
     });
-
-    return { singleRow, mainLayoutParticipantId };
+    return {singleRow, mainLayoutParticipantId: mainParticipant};
   }, [
     meetingLayout,
     participants,
@@ -511,6 +514,22 @@ const MainViewContainer = ({
 
   return participants ? (
     <>
+      {currentTranscription &&
+        <span
+          style={{
+            position: 'fixed',
+            left: '50%',
+            bottom:0,
+            margin:'5vh 0',
+            padding: '3px',
+            background: '#333',
+            color: '#e9e9e9',
+            transform: 'translateX(-50%)'
+          }}
+        >
+          {currentTranscription}
+        </span>
+      }
       <div
         style={{
           width,
@@ -538,6 +557,7 @@ const MainViewContainer = ({
             paddingLeft: mainScreenViewActive ? spacing : 0,
             paddingTop: mainScreenViewActive ? spacing : 0,
           }}
+          id='pinnedParticipants'
         >
           <div
             style={{
@@ -562,6 +582,8 @@ const MainViewContainer = ({
               position: "relative",
             }}
           >
+             {/* {(localParticipantId === presenterId || pinnedParticipant === presenterId) && ( */}
+            {/* {pinnedParticipant !== presenterId && localParticipantId !== presenterId */}
             {whiteboardStarted && (
               <WhiteboardContainer
                 {...{
@@ -620,9 +642,9 @@ const MainViewContainer = ({
             )}
           </div>
         </div>
-        {isMobile && mainScreenViewActive ? null : singleRow.length <=
-          0 ? null : (
+        {isMobile && mainScreenViewActive ? null : singleRow.length <= 0 ? null : (
           <div
+            id='unpinnedParticipants'
             style={{
               backgroundColor:
                 appTheme === appThemes.DARK

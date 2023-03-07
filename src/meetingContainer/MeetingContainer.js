@@ -721,7 +721,7 @@ const MeetingContainer = () => {
     onLiveStreamStopped: _handleOnLiveStreamStopped,
     onEntryRequested: _handleOnEntryRequested,
     onEntryResponded: _handleOnEntryResponded,
-    onPinStateChanged: _handleOnPinStateChanged,
+    // onPinStateChanged: _handleOnPinStateChanged,
     onError: _handleOnError,
     onRecordingStateChanged: _handleOnRecordingStateChanged,
     onLivestreamStateChanged: _handleOnLivestreamStateChanged,

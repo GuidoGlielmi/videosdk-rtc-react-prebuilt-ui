@@ -15,7 +15,7 @@ import {
   MenuItem,
   Popover,
 } from '@material-ui/core';
-import React, {useMemo, useState} from 'react';
+import React, {useContext, useMemo, useState} from 'react';
 import {appThemes, useMeetingAppContext} from '../../MeetingAppContextDef';
 import {RaiseHand} from '../../icons';
 import {List} from 'react-virtualized';
@@ -34,6 +34,7 @@ import ParticipantVideoOffIcon from '../../icons/ParticipantVideoOffIcon';
 import ParticipantPinIcon from '../../icons/ParticipantPinIcon';
 import ParticipantRemoveIcon from '../../icons/ParticipantRemoveIcon';
 import useIsHls from '../useIsHls';
+import {pinContext} from '../../contexts/PinContext';
 
 const useStyles = makeStyles(() => ({
   textField: {
@@ -73,6 +74,7 @@ const useStyles = makeStyles(() => ({
 
 function ParticipantListItem({raisedHand, participantId}) {
   const {presenterId} = useMeeting();
+  const {setPinnedParticipant} = useContext(pinContext);
   const {
     participant,
     micOn,
@@ -195,7 +197,7 @@ function ParticipantListItem({raisedHand, participantId}) {
             variant='body1'
             noWrap
           >
-            {isLocal ? 'Yo' : nameTructed(displayName, 10)}
+            {isLocal ? 'Yo' : nameTructed(displayName, 25)}
           </Typography>
         </Box>
 
@@ -323,7 +325,7 @@ function ParticipantListItem({raisedHand, participantId}) {
                   </IconButton>
                 </Box>
               )}
-              {canPin && (
+              {canPin && !presenterId && (
                 <Box
                   style={{
                     display: 'flex',
@@ -343,7 +345,13 @@ function ParticipantListItem({raisedHand, participantId}) {
                       size='small'
                       onClick={e => {
                         e.stopPropagation();
-                        pinState?.share || pinState?.cam ? unpin() : pin();
+                        if (pinState?.share || pinState?.cam) {
+                          setPinnedParticipant(null);
+                          unpin();
+                        } else {
+                          setPinnedParticipant(participantId);
+                          pin();
+                        }
                       }}
                       style={{
                         display: 'flex',
