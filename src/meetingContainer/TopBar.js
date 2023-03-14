@@ -1551,7 +1551,7 @@ const EndCallBTN = () => {
 
   const sendChatMessage = mMeeting?.sendChatMessage;
 
-  const leave = mMeeting?.leave;
+  const leave = () => window.parent.location = document.referrer;// mMeeting?.leave;
   const end = mMeeting?.end;
 
   const tollTipEl = useRef();

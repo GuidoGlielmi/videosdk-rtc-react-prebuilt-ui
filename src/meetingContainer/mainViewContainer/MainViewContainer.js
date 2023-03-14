@@ -557,14 +557,14 @@ const MainViewContainer = ({height, width, whiteboardToolbarWidth, whiteboardSpa
             paddingLeft: mainScreenViewActive ? spacing : 0,
             paddingTop: mainScreenViewActive ? spacing : 0,
           }}
-          id='pinnedParticipants'
+          id='pinnedParticipant'
         >
           <div
             style={{
               height: height - 2 * spacing,
               width: mainScreenViewActive
                 ? width -
-                  (isMobile ? 0 : actualPresentingSideBarWidth) -
+                  (isMobile && false ? 0 : actualPresentingSideBarWidth) -
                   2 * spacing
                 : 0,
               backgroundColor:
@@ -642,7 +642,7 @@ const MainViewContainer = ({height, width, whiteboardToolbarWidth, whiteboardSpa
             )}
           </div>
         </div>
-        {isMobile && mainScreenViewActive ? null : singleRow.length <= 0 ? null : (
+        {false && isMobile && mainScreenViewActive ? null : singleRow.length <= 0 ? null : (
           <div
             id='unpinnedParticipants'
             style={{
